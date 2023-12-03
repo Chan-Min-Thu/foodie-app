@@ -29,7 +29,7 @@ model Location {
   companyId                    Int
   company                      Company                        @relation(fields: [companyId], references: [id])
   disabledMenuCategoryLocation DisabledMenuCategoryLocation[]
-  disabledMenuLoction          DisabledMenuLoction[]
+  disabledMenuLoction          DisabledMenuLocation[]
   table                        Table[]
   isArchived                   Boolean                        @default(false)
   createdAt                    DateTime                       @default(now())
@@ -65,7 +65,7 @@ model Menu {
   price               Int
   imgUrl              String
   menuCategoryMenu    MenuCategoryMenu[]
-  disabledMenuLoction DisabledMenuLoction[]
+  disabledMenuLoction DisabledMenuLocation[]
   addOnCategoryMenu   AddOnCategoryMenu[]
   orderLine           OrderLine[]
   isArchived          Boolean               @default(false)
@@ -84,7 +84,7 @@ model MenuCategoryMenu {
   updatedAt      DateTime     @updatedAt
 }
 
-model DisabledMenuLoction {
+model DisabledMenuLocation {
   id         Int      @id @default(autoincrement())
   menuId     Int
   menu       Menu     @relation(fields: [menuId], references: [id])
@@ -159,6 +159,7 @@ model OrderLine {
 model Table {
   id         Int      @id @default(autoincrement())
   name       String
+  assetUrl   String
   locationId Int
   location   Location @relation(fields: [locationId], references: [id])
   isArchived Boolean  @default(false)

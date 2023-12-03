@@ -78,7 +78,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     //10. create one row in tables
     const tableName = "Default table Name";
     const table = await prisma.table.create({
-      data: { name: tableName, locationId: location.id },
+       data: { name: tableName, locationId: location.id ,assetUrl:""},
     });
 
     return res.status(200).json({
@@ -99,16 +99,19 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     const companyId = dbUser.companyId;
 
     // find locationIds
-    const locations = await prisma.location.findMany({ where: { companyId } });
+    const locations = await prisma.location.findMany({ where: { companyId,isArchived:false } });
     const locationIds = locations.map((item) => item.id);
 
     //find MenuCategories
     const menuCategories = await prisma.menuCategory.findMany({
-      where: { companyId },
+      where: { companyId,isArchived:false },
     });
     const menuCategoryIds = menuCategories.map((item) => item.id);
-    // console.log(menuCategoryIds);
+    
+    //find DisabledMenuCategoryLocation
 
+    const disabledMenuCategoryLocation  = await prisma.disabledMenuCategoryLocation.findMany({where:{menuCategoryId:{in:menuCategoryIds}}})
+    
     //find Menus
     const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
       where: { menuCategoryId: { in: menuCategoryIds },isArchived:false },
@@ -120,9 +123,11 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { id: { in: menuIds },isArchived:false },
     });
 
+    const disabledMenuLocation = await prisma.disabledMenuLocation.findMany({where:{id:{in:menuIds},isArchived:false}})
+
     //find addOnCategories
     const addOnCategoryMenus = await prisma.addOnCategoryMenu.findMany({
-      where: { menuId: { in: menuIds, }},
+      where: { menuId: { in: menuIds },isArchived:false},
     });
     const addOnCategoryIds = addOnCategoryMenus.map(
       (item) => item.addOnCategoryId
@@ -154,6 +159,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       tables,
       locations,
       menuCategoryMenus,
+      disabledMenuCategoryLocation,
+      disabledMenuLocation
     });
   }
   // return res.status(200).json({})

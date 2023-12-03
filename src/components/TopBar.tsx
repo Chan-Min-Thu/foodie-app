@@ -43,7 +43,7 @@ const TopBar = ({open,setOpen}:Props) => {
         Foodie App
       </Typography>
       {session ? (
-        <Button variant="contained" sx={{ color: "secondary.main" ,fontSize:12}} onClick={()=>signOut({callbackUrl:"/"})}>
+        <Button variant="contained" sx={{ color: "secondary.main" ,fontSize:12}} onClick={()=>signOut({callbackUrl:"/backoffice"})}>
           Sign Out
         </Button>
       ) : <span/>

@@ -17,4 +17,9 @@ export interface MenuCategoryOptions extends BasicOptions{
 export interface UpdateMenuCategoryOptions extends BasicOptions{
     id:number
     name:string
+    isAvailable:boolean
+    locationId?:number
+}
+export interface DeleteMenuCategoryOptions extends BasicOptions{
+    id:number
 }

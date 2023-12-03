@@ -66,7 +66,6 @@ const NewTable = ({ open, setOpen }: Props) => {
       createTable({
         ...newTable,
         onSuccess: () => {
-          setOpen(false);
           dispatch(
             snackBarOpen({
               message: "New table created successfully.",
@@ -76,10 +75,10 @@ const NewTable = ({ open, setOpen }: Props) => {
             })
           );
         },
-
       })
     );
-    setNewTable(defalutTable)
+    setNewTable(defalutTable);
+    setOpen(false);
   };
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>

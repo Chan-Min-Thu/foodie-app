@@ -1,4 +1,4 @@
-import ItemCard from "@/components/ItemCard/itemCard";
+import ItemCard from "@/components/ItemCard/ItemCard";
 import NewAddonCategory from "@/components/NewAddonCategory/NewAddonCategory";
 import ClassIcon from "@mui/icons-material/Class";
 import { useAppSelector } from "@/store/hook";

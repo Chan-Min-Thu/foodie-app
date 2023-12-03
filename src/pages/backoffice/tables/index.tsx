@@ -1,4 +1,4 @@
-import ItemCard from "@/components/ItemCard/itemCard";
+import ItemCard from "@/components/ItemCard/ItemCard";
 import { useAppSelector } from "@/store/hook";
 import { theme } from "@/utlis/theme";
 import { Box, Button,useMediaQuery } from "@mui/material"
@@ -24,7 +24,14 @@ const Tables = ()=>{
         </Box>
         <Box sx={{display:"flex",flexWrap:"wrap"}}>
           {tables.map((item) => (
+            <Box sx={{display:"flex",flexDirection:"column"}}>
             <ItemCard key={item.id} icon={<TableBarIcon/>} href={`/backoffice/tables/${item?.id}`} name={item?.name}/>
+            <Box sx={{display:"flex",justifyContent:"center"}}>
+            <Button variant="contained" >
+              Print
+            </Button>
+            </Box>
+            </Box>
           ))}
         </Box>
         <NewTable open={open} setOpen={setOpen} />

@@ -1,5 +1,9 @@
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { updateMenuCategory } from "@/store/slice/menuCategorySlice";
+import { menuCategoryMenuSlice } from "@/store/slice/menuCategoryMenuSlice";
+import {
+  deleteMenuCatagory,
+  updateMenuCategory,
+} from "@/store/slice/menuCategorySlice";
 import { updateMenu } from "@/store/slice/menuSlice";
 import { snackBarOpen } from "@/store/slice/snackBarSlice";
 import { UpdateMenuCategoryOptions } from "@/types/menuCategory";
@@ -11,6 +15,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
+  Switch,
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/router";
@@ -19,68 +25,120 @@ import { useEffect, useState } from "react";
 const MenuCategoryDetails = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [menuCategoryName,setMenuCategoryName] =useState<string>("") 
+
+  const [menuCategory, setMenuCategory] = useState<UpdateMenuCategoryOptions>();
   const dispatch = useAppDispatch();
 
-  const menuCategoryId = router.query.id;
+  const currentMenuCategoryId = router.query.id;
   const menuCategories = useAppSelector((state) => state.menuCateogry.items);
-  const menuCategory = menuCategories.find(
-    (item) => item.id === Number(menuCategoryId)
+  const disabledMenuCategoryLocations = useAppSelector((state)=>state.disabledMenuCategoryLocation.items)
+  const curentDisabledMCL = disabledMenuCategoryLocations.find(item=>item?.menuCategoryId === Number(currentMenuCategoryId))
+  const currentmenuCategory = menuCategories.find(
+    (item) => item.id === Number(currentMenuCategoryId)
   );
-  
-  
-  // useEffect(()=>{
-  //   setMenuCategoryName(menuCategory?.name);
-  // },[menuCategory,menuCategoryName])
-  
-  if (!menuCategory) return null;
-  const handleUpdateMenuCategory =()=>{ 
-    dispatch(updateMenuCategory({id:Number(menuCategoryId),name:menuCategoryName,onSuccess:()=>{
-      router.push("./")
-      dispatch(snackBarOpen({  message: "New menu category updated succcessfully.",
-        severity: "success",
-        open: true,
-        autoHideDuration: 3000}))
-    }}))
 
- }
- const handleDeleteMenuCategory  =()=>{}
+  useEffect(() => {
+    if (currentmenuCategory) {
+      const defaultMenuCategory = {
+        id: Number(currentMenuCategoryId),
+        name: currentmenuCategory.name,
+        isAvailable:curentDisabledMCL ? false :true ,
+      };
+      setMenuCategory(defaultMenuCategory);
+    }
+  }, [currentmenuCategory,menuCategories]);
+
+  if (!menuCategory) return null;
+  const handleUpdateMenuCategory = () => {
+    
+    dispatch(
+      updateMenuCategory({
+        id: Number(currentMenuCategoryId),
+        name: menuCategory.name,
+        isAvailable: menuCategory.isAvailable,
+        locationId: Number(localStorage.getItem("selectedlocationId")),
+        onSuccess: () => {
+          dispatch(
+            snackBarOpen({
+              message: "New menu category updated succcessfully.",
+              severity: "success",
+              open: true,
+              autoHideDuration: 3000,
+            })
+          );
+        },
+      })
+    );
+    router.push("/backoffice/menu-categories");
+  };
+  const handleDeleteMenuCategory = () => {
+    dispatch(
+      deleteMenuCatagory({
+        id: menuCategory.id,
+        onSuccess: () => {
+          router.push("/backoffice/menu-categories");
+        },
+      })
+    );
+  };
   return (
     <Box
       sx={{
-        display:"flex",
-        justifyContent:"center",
+        display: "flex",
+        justifyContent: "center",
         flexDirection:"column",
         m: "auto",
       }}
     >
-  
-        <Box sx={{ display: "flex", justifyContent: "flex-end",my:2 ,width:"100%"}}>
-          <Button
-            variant="outlined"
-            onClick={() => setOpen(true)}
-            color={"error"}
-          >
-            Delete
-          </Button>
-        </Box>
-        <TextField defaultValue={menuCategory.name} onChange={(evt)=>setMenuCategoryName(evt.target.value)}/>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-          <Button
-            variant="contained"
-            sx={{ mr: 2 }}
-            onClick={() => router.push("/backoffice/menu-categories")}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            disabled={!menuCategory.name}
-            onClick={handleUpdateMenuCategory}
-          >
-            Update
-          </Button>
-        </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          my: 2,
+          flexDirection:"column"
+        }}>
+          < Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          my: 2,
+          width: "100%",
+        }}
+      >
+        <Button
+          variant="outlined"
+          onClick={() => setOpen(true)}
+          color={"error"}
+        >
+          Delete
+        </Button>
+      </Box>
+      <TextField
+        defaultValue={menuCategory.name}
+        onChange={(evt) => setMenuCategory({ ...menuCategory, name: evt.target.value })} />
+      <FormControlLabel
+        control={
+        <Switch
+        defaultChecked={menuCategory?.isAvailable}
+        onChange={(evt, value) => setMenuCategory({...menuCategory,isAvailable:value})} />
+       }
+        label="Available" />
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Button
+          variant="contained"
+          sx={{ mr: 2 }}
+          onClick={() => router.push("/backoffice/menu-categories")}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          disabled={!menuCategory.name}
+          onClick={handleUpdateMenuCategory}
+        >
+          Update
+        </Button>
+      </Box>
       <Dialog
         open={open}
         // TransitionComponent={CSSTransition}
@@ -88,10 +146,10 @@ const MenuCategoryDetails = () => {
         onClose={() => setOpen(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Comfirm Delete Menu Category</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete this Menu-categroy?
+        <DialogTitle>Comfirm Delete MenuCategory</DialogTitle>
+        <DialogContent sx={{p:2}}>
+          <DialogContentText sx={{p:2}} id="alert-dialog-slide-description">
+            Are you sure you want to delete this Menu Category?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -99,6 +157,7 @@ const MenuCategoryDetails = () => {
           <Button onClick={handleDeleteMenuCategory}>Comfirm</Button>
         </DialogActions>
       </Dialog>
+    </Box>
     </Box>
   );
 };

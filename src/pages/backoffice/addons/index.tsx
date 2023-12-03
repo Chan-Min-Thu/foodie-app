@@ -1,4 +1,4 @@
-import ItemCard from "@/components/ItemCard/itemCard";
+import ItemCard from "@/components/ItemCard/ItemCard";
 import NewAddon from "@/components/NewAddon/NewAddon";
 import NewMenuCategory from "@/components/NewMenuCategory/NewMenuCategory";
 import { useAppSelector } from "@/store/hook";

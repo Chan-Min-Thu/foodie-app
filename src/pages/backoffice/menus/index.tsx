@@ -1,5 +1,5 @@
-import ItemCard from "@/components/ItemCard/itemCard";
 import NewMenu from "@/components/NewMenu/NewMenu";
+import MenuCard from "@/components/ItemCard/MenuCard"
 import { useAppSelector } from "@/store/hook";
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Paper, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
@@ -11,6 +11,7 @@ const Menus = () => {
   const [open, setOpen] = useState(false);
   const matches = useMediaQuery(theme.breakpoints.between("xs","md"))
   const menus = useAppSelector((state) => state.menu.items);
+  const disabledMenuLocations = useAppSelector((state)=>state.disabledMenuLocation.items)
   if(!menus) return null;
   console.log(menus)
   return (
@@ -21,9 +22,12 @@ const Menus = () => {
         </Button>
       </Box>
       <Box sx={{display:"flex",flexWrap:"wrap"}}>
-        {menus?.map((item) => (
-        <ItemCard key={item.id} name={item?.name} icon={<LocalDiningIcon />} href={`menus/${item.id}`}/>
-        ))}
+        {menus?.map((item) => {
+          const exit = disabledMenuLocations.find(i=> i.menuId === item.id)
+          const isAvailable = exit ? true: false;
+        return <MenuCard key={item.id} menu={item} isAvailable={isAvailable} href={`menus/${item.id}`}/>
+        }
+        )}
       </Box>
       <NewMenu open={open} setOpen={setOpen} />
     </Box>

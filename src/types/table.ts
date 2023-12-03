@@ -20,6 +20,7 @@ export interface CreateTableOptions extends BasicOptions{
 export interface UpdateTableOptions extends BasicOptions{
     id:number
     name:string;
+    assetUrl?:string
 }
 
 export interface DeleteTableOptions extends BasicOptions{

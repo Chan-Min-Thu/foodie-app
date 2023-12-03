@@ -1,4 +1,4 @@
-import ItemCard from "@/components/ItemCard/itemCard";
+import ItemCard from "@/components/ItemCard/ItemCard";
 import NewLocation from "@/components/Location/NewLocaton";
 import { useAppSelector } from "@/store/hook";
 import { Box, Button, Typography } from "@mui/material"

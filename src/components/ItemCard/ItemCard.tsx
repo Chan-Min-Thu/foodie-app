@@ -1,4 +1,5 @@
 import { Link, Paper, Typography } from "@mui/material";
+import React from "react";
 import { ReactNode } from "react";
 
 export interface Props {
@@ -6,8 +7,9 @@ export interface Props {
   icon: ReactNode;
   subTitle?: string;
   href?: string;
+  isAvailable?:boolean
 }
-const ItemCard = ({ name, icon, href }: Props) => {
+const ItemCard = ({ name, icon, href ,isAvailable}: Props) => {
   if (href) {
     return (
       <Link href={href} style={{textDecoration:"none"}}>
@@ -19,6 +21,7 @@ const ItemCard = ({ name, icon, href }: Props) => {
             px: 2,
             py: 2,
             m: 3,
+            opacity:isAvailable === false ? 0.4 : 1,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

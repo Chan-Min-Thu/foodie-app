@@ -13,13 +13,16 @@ export interface BasicOptions{
 export interface CreateMenuOptions extends BasicOptions{
     name:string
     price:number,
-    menuCategoryId:number[]
+    menuCategoryId:number[],
+    imgUrl?:string
 }
 export  interface UpdateMenuOptions extends BasicOptions{
     id:number,
     name?:string,
     price?:number,
-    menuCategoryId:number[]
+    menuCategoryId:number[],
+    isAvaliable?:boolean,
+    locationId?:number
 }
 export  interface DeleteMenuOptions extends BasicOptions{
     id:number,

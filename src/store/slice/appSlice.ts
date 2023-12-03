@@ -10,6 +10,8 @@ import { setLocation } from "./locationSlice";
 import { setAddonCategory } from "./addonCategorySlice";
 import { setMenuCategoryMenu } from "./menuCategoryMenuSlice";
 import { setAddonCategoryMenu } from "./addonCategoryMenuSlice";
+import { setDisabledMenuCategoryLocation } from "./disabledMenuCategoryLocation";
+import { setDisabledMenuLocation } from "./disabledMenuLocation";
 
 const initialState: AppSlice = {
   init: false,
@@ -21,22 +23,35 @@ export const fetchAppData = createAsyncThunk(
   async (payload: AppOption, thunkApi) => {
     const { onSuccess, isError } = payload;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/app`)
+      const response = await fetch(`${config.apiBaseUrl}/app`);
       const datafromServer = await response.json();
       const {
-        menuCategories,menus,addOnCategories,addons,tables,locations,menuCategoryMenus,addOnCategoryMenus
-      } =   datafromServer
+        menuCategories,
+        menus,
+        addOnCategories,
+        addons,
+        tables,
+        locations,
+        menuCategoryMenus,
+        addOnCategoryMenus,
+        disabledMenuCategoryLocation,
+        disabledMenuLocation,
+      } = datafromServer;
       thunkApi.dispatch(setInit(true));
-      thunkApi.dispatch(setMenuCategory(menuCategories))
-      thunkApi.dispatch(setMenu(menus))
-      thunkApi.dispatch(setMenuCategoryMenu(menuCategoryMenus))
-      thunkApi.dispatch(setAddonCategory(addOnCategories))
-      thunkApi.dispatch(setAddonCategoryMenu(addOnCategoryMenus))
-      thunkApi.dispatch(setAddon(addons))
-      thunkApi.dispatch(setTable(tables))
-      thunkApi.dispatch(setLocation(locations))
+      thunkApi.dispatch(setMenuCategory(menuCategories));
+      thunkApi.dispatch(setMenu(menus));
+      thunkApi.dispatch(setMenuCategoryMenu(menuCategoryMenus));
+      thunkApi.dispatch(setAddonCategory(addOnCategories));
+      thunkApi.dispatch(setAddonCategoryMenu(addOnCategoryMenus));
+      thunkApi.dispatch(setAddon(addons));
+      thunkApi.dispatch(setTable(tables));
+      thunkApi.dispatch(setLocation(locations));
+      thunkApi.dispatch(
+        setDisabledMenuCategoryLocation(disabledMenuCategoryLocation)
+      );
+      thunkApi.dispatch(setDisabledMenuLocation(disabledMenuLocation));
       onSuccess && onSuccess();
-    } catch(err) {
+    } catch (err) {
       isError && isError(err);
     }
   }
@@ -46,8 +61,8 @@ export const appSlice = createSlice({
   initialState,
   reducers: {
     setInit: (state, action) => {
-      state.init= action.payload;
-    }
+      state.init = action.payload;
+    },
   },
 });
 

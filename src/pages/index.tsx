@@ -5,13 +5,8 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { autoBatchEnhancer } from "@reduxjs/toolkit";
 
 export default function Home() {
-  const { data: session } = useSession();
-  const router = useRouter();
-  if (!session) {
-    return (
-      <Box>h</Box>
-    );
-  } else {
-    router.push("/backoffice/order");
-  }
+  return(
+  <Box>
+    <h1>This is home page.</h1>
+  </Box>)
 }

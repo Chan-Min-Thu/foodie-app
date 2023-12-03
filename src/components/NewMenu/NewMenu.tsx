@@ -3,8 +3,10 @@ import { createMenu } from "@/store/slice/menuSlice";
 import { snackBarOpen } from "@/store/slice/snackBarSlice";
 import { CreateMenuOptions } from "@/types/menu";
 import {
+  Box,
   Button,
   Checkbox,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -19,10 +21,15 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";
+import  { useDropzone } from 'react-dropzone';
+import NewDropZone from "../FileDropZone";
+import FileDropZone from "../FileDropZone";
+import { config } from "@/utlis/config";
+import { apiBaseUrl } from "next-auth/client/_utils";
 
 interface Props {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const ITEM_HEIGHT = 48;
@@ -36,13 +43,18 @@ const MenuProps = {
   },
 };
 
-const NewMenu = ({ open, setOpen }: Props) => {
+const NewMenu = ({ open, setOpen}: Props) => {
   const menuCategories = useAppSelector((state) => state.menuCateogry.items);
+
   const [newMenu, setNewMenu] = useState<CreateMenuOptions>({
     name: "",
     price: 0,
     menuCategoryId: [],
   });
+  const [menuImage,setMenuImage] = useState<File>();
+  const onFileSelected = (files: File[]) => {
+    setMenuImage(files[0]);
+  };
   const dispatch = useAppDispatch();
   const handleChange = (evt: SelectChangeEvent<number[]>) => {
     const selectedIds = evt.target.value as number[];
@@ -51,30 +63,61 @@ const NewMenu = ({ open, setOpen }: Props) => {
   // const onSuccess = () => {
   //   setOpen(false);
   // };
-  const handleCreateMenu = () => {
+  const handleCreateMenu = async () => {
+    const newMenuPayload = {...newMenu}
+    if(menuImage){
+      const formData = new FormData();
+      formData.append("files",menuImage);
+      const response = await fetch(`${config.apiBaseUrl}/asset`,{
+        method:"POST",
+        body:formData
+      })
+      const { assetUrl } =  await response.json();
+      newMenuPayload.imgUrl = assetUrl;
+      dispatch(
+        createMenu({
+          ...newMenuPayload,
+          onSuccess: () => {
+            setOpen(false);
+            dispatch(
+              snackBarOpen({
+                message: "New Menu created succcessfully.",
+                severity: "success",
+                open: true,
+                autoHideDuration: 3000,
+              })
+            );
+          },
+        })
+      );
+    }
     dispatch(
       createMenu({
         ...newMenu,
-        onSuccess:()=> {  setOpen(false)
-        dispatch(snackBarOpen({
-          message: "New Menu created succcessfully.",
-          severity: "success",
-          open: true,
-          autoHideDuration: 3000
-        }))
-      }})
+        onSuccess: () => {
+          setOpen(false);
+          dispatch(
+            snackBarOpen({
+              message: "New Menu created succcessfully.",
+              severity: "success",
+              open: true,
+              autoHideDuration: 3000,
+            })
+          );
+        },
+      })
     );
     setNewMenu({
       name: "",
       price: 0,
       menuCategoryId: [],
-    })
+    });
   };
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Create Menu </DialogTitle>
       <DialogContent sx={{ width: 400 }}>
-        <TextField
+        <TextField 
           id="outlined-basic"
           label="Name"
           defaultValue={newMenu.name}
@@ -131,6 +174,16 @@ const NewMenu = ({ open, setOpen }: Props) => {
             ))}
           </Select>
         </FormControl>
+        <Box sx={{ mt: 2 }}>
+          <FileDropZone onFileSelected={onFileSelected} />
+          {menuImage && (
+            <Chip
+              sx={{ mt: 2 }}
+              label={menuImage.name}
+              onDelete={() => setMenuImage(undefined)}
+            />
+          )}
+    </Box>
         <DialogContent sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button
             variant="contained"
@@ -154,3 +207,4 @@ const NewMenu = ({ open, setOpen }: Props) => {
   );
 };
 export default NewMenu;
+

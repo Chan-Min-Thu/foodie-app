@@ -10,6 +10,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
+  Switch,
   TextField,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -33,7 +35,9 @@ const MenuDetails = () => {
   const menuCategoryMenu = useAppSelector(
     (state) => state.menuCategoryMenu.items
   );
-
+  
+  const disabledMenuLocations = useAppSelector((state)=>state.disabledMenuLocation.items);
+  const disabledMenuLocation = disabledMenuLocations.find(i=> i.menuId === Number(menuId))
   const menuCategoryIdFromServer = menuCategoryMenu
     .filter((menu) => menu.menuId === Number(menuId))
     .map((item) => item.menuCategoryId);
@@ -45,14 +49,17 @@ const MenuDetails = () => {
     menuCategoryIdFromServer
   );
   useEffect(() => {
-    // console.log(menu);
+  if(menu){
     setData({
       id: Number(menuId),
       name: menu?.name,
       price: menu?.price,
-      menuCategoryId: menuCategoryIdFromServer,
+      isAvaliable:disabledMenuLocation ? false:true,
+      menuCategoryId: menuCategoryIdFromServer
     });
+  }
   }, [menu]);
+  console.log(data?.isAvaliable)
   if (!menu || !data) return null;
   const handleChange = (evt: SelectChangeEvent<number[]>) => {
     console.log(evt.target.value);
@@ -67,8 +74,10 @@ const MenuDetails = () => {
         name: data.name,
         price: data.price,
         menuCategoryId,
+        isAvaliable:data.isAvaliable,
+        locationId:Number(localStorage.getItem("selectedlocationId")),
         onSuccess: () => {
-          router.push("/backoffice/menus");
+          
           dispatch(
             snackBarOpen({
               message: "New menu updated succcessfully.",
@@ -80,6 +89,7 @@ const MenuDetails = () => {
         },
       })
     );
+    router.push("/backoffice/menus");
   };
 
   
@@ -184,6 +194,7 @@ const MenuDetails = () => {
             ))}
           </Select>
         </FormControl>
+        <FormControlLabel control={<Switch defaultChecked={data.isAvaliable} onChange={(evt,value)=>setData({...data,isAvaliable:value})} />} label="Label" />
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           <Button
             variant="contained"
@@ -209,8 +220,8 @@ const MenuDetails = () => {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>Comfirm Delete Menu</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+        <DialogContent sx={{p:2}}>
+          <DialogContentText sx={{p:2}} id="alert-dialog-slide-description">
             Are you sure you want to delete this Menu?
           </DialogContentText>
         </DialogContent>

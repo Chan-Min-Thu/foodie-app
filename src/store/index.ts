@@ -8,7 +8,9 @@ import tableReducer from "./slice/tableSlice";
 import locationReducer from "./slice/locationSlice";
 import menuCategoryMenuReducer from "./slice/menuCategoryMenuSlice";
 import addonCategoryMenuReducer from "./slice/addonCategoryMenuSlice";
-import snackBarReducer from "./slice/snackBarSlice"
+import snackBarReducer from "./slice/snackBarSlice";
+import disabledMenuCategoryLocationReducer from "./slice/disabledMenuCategoryLocation"
+import disabledMenuLocationReducer from "./slice/disabledMenuLocation"
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +23,9 @@ export const store = configureStore({
     addon:addonReducer,
     table:tableReducer,
     location:locationReducer,
-    snackBar:snackBarReducer
+    snackBar:snackBarReducer,
+    disabledMenuCategoryLocation:disabledMenuCategoryLocationReducer,
+    disabledMenuLocation:disabledMenuLocationReducer
   },
 });
 
