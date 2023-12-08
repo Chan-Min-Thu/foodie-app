@@ -11,6 +11,12 @@ const Tables = ()=>{
     const [open,setOpen]= useState(false);
     const matches =useMediaQuery(theme.breakpoints.between("xs","md"))
     const tables = useAppSelector(state=>state.table.items)
+
+    const handleQrcodePrint = (assetUrl:string)=>{
+      const ImageWindow = window.open("","_blank");
+      ImageWindow?.document.write(`<html><head><title>Print Image</title></head><body style="text-align: center;"><img src="${assetUrl}" onload="window.print();window.close()" /></body></html>s`) 
+      ImageWindow?.document.close();
+   }
     return(
         <Box sx={{width:matches? "100%":"80vw"}}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -24,10 +30,10 @@ const Tables = ()=>{
         </Box>
         <Box sx={{display:"flex",flexWrap:"wrap"}}>
           {tables.map((item) => (
-            <Box sx={{display:"flex",flexDirection:"column"}}>
+            <Box key={item.id} sx={{display:"flex",flexDirection:"column"}}>
             <ItemCard key={item.id} icon={<TableBarIcon/>} href={`/backoffice/tables/${item?.id}`} name={item?.name}/>
             <Box sx={{display:"flex",justifyContent:"center"}}>
-            <Button variant="contained" >
+            <Button variant="contained" onClick={()=>handleQrcodePrint(item.assetUrl)}>
               Print
             </Button>
             </Box>

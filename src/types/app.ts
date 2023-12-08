@@ -6,4 +6,7 @@ export interface AppSlice {
   error: Error | null;
 }
 
-export interface AppOption extends BasicOptions {}
+export interface AppOption extends BasicOptions {
+  companyId?:number,
+  tableId?:number
+}

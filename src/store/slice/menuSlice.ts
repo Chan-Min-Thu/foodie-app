@@ -47,7 +47,7 @@ export const updateMenu = createAsyncThunk(
         body: JSON.stringify({ id, name, price, menuCategoryId,isAvaliable,locationId }),
       });
       const data = await response.json(); // backend return value is {menu,menuCategoryMenu}
-      console.log(data.menu)
+      // console.log(menu)
       thunkApi.dispatch(replaceMenu(data.menu));
       if(isAvaliable === false){
         return thunkApi.dispatch(addDisabledMenuLocation(data.disabledMenuLocation))

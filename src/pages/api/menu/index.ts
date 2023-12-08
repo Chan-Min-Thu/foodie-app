@@ -18,7 +18,7 @@ export default async function handler(
     // const newMenuImgUrl =
     //   "https://media.istockphoto.com/id/1150368709/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%82%E0%B8%B2%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%94-confit.jpg?s=1024x1024&w=is&k=20&c=cVSDW5JY8uHc_kRF161aRgRPvXs7k89TEBMcx4-9Q7s=";
     const menu = await prisma.menu.create({
-      data: { name, price, imgUrl },
+      data: { name, price, imgUrl:imgUrl || "" },
     });
     // console.log("mc", menuCategoryId);
     const menuCategoryMenu = await prisma.$transaction(
@@ -31,15 +31,16 @@ export default async function handler(
     return res.status(200).json({ menu, menuCategoryMenu });
   } else if (method === "PUT") {
     const { id, name, price, menuCategoryId,isAvaliable,locationId } = req.body;
+    // console.log("isAvaliable",isAvaliable)
     const isValid =
       id && name && price !== undefined && menuCategoryId.length > 0;
-    // console.log("isValid", isValid);
+    // console.log("id",id,"name",name,"price",price)
     if (!isValid) return res.status(400).send("Bad request...");
     const menu = await prisma.menu.update({
       data: { name, price },
       where: { id },
     });
-    
+    console.log(menu)
     //get menuCategoryMenuArray[]<--  by changing object<--{menuId,menuCategoryId}<-- getting frontend menuCategoryId<--[] data
     const menuCategoryMenuArray = menuCategoryId.map(
       (categoryId:number) => ({
@@ -47,6 +48,7 @@ export default async function handler(
         menuCategoryId: categoryId,
       })
     );
+    console.log(menuCategoryMenuArray)
 
     await prisma.menuCategoryMenu.deleteMany({ where: { menuId: id } });
     const menuCategoryMenu = await prisma.$transaction(
@@ -58,14 +60,16 @@ export default async function handler(
     );
     if(locationId && isAvaliable === false){
       const exit = await prisma.disabledMenuLocation.findFirst({where:{menuId:menu.id}})
+      console.log("exit",exit)
       if(exit) return res.status(200).json({disabledMenuLocation:exit,menuCategoryMenu,menu});
       const disabledMenuLocation = await prisma.disabledMenuLocation.create({data:{menuId:menu.id,locationId}})
       return res.status(200).json({disabledMenuLocation,menuCategoryMenu,menu});
     }else if(locationId && isAvaliable === true){
       const exit = await prisma.disabledMenuLocation.findFirst({where:{menuId:menu.id}})
+      if(!exit) return res.status(200).json({menuCategoryMenu,menu});
       if(exit) {
-        const disabledMenuLocation = await prisma.disabledMenuLocation.deleteMany({where:{menuId:exit.id,locationId}})
-        return res.status(200).json({disabledMenuLocation,menuCategoryMenu,menu});
+        const disabledMenuCategoryLocation = await prisma.disabledMenuLocation.deleteMany({where:{menuId:id,locationId}})
+        return res.status(200).json({menuCategoryMenu,menu,disabledMenuCategoryLocation});
       }
     }else{
     return res.status(200).json({ menu, menuCategoryMenu });

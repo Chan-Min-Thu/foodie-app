@@ -1,6 +1,6 @@
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
-import logo from "../asserts/logo.png";
+import Logo from "../assets/logo.png";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { theme } from "@/utlis/theme";
 import { Span } from "next/dist/trace";
@@ -33,7 +33,7 @@ const TopBar = ({open,setOpen}:Props) => {
         {open?<CloseIcon onClick={()=>setOpen(false)} sx={{display:matches?"block":"none",color:"info.main",mr:2}}/>:<SegmentIcon onClick={()=>setOpen(true)} sx={{display:matches?"block":"none",color:"info.main",mr:2}}/>}
         <Box sx={{width:70}}>
         <Image
-          src={logo}
+          src={Logo}
           alt="logo"
           style={{ width: "100%", height: "100%" }}
         />
