@@ -3,9 +3,86 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { prisma } from "@/utlis/db";
 
-const handle = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
-  // console.log(session);
+  if(req.method === "GET"){
+  console.log(req.query);
+  const companyId= Number(req.query.companyId);
+  const tableId = Number(req.query.tableId)
+  const isOrderAppRequest = companyId && tableId;
+  console.log("isOrderAppR",companyId,tableId)
+  if(isOrderAppRequest){
+    // find locationIds
+    const locations = await prisma.location.findMany({ where: { companyId:Number(companyId),isArchived:false } });
+    const locationIds = locations.map((item) => item.id);
+
+    //find MenuCategories
+    let menuCategories = await prisma.menuCategory.findMany({
+      where: { companyId:Number(companyId),isArchived:false },
+    });
+    const menuCategoryIds = menuCategories.map((item) => item.id);
+    
+    //find DisabledMenuCategoryLocation
+
+    const disabledMenuCategoryIds  = (await prisma.disabledMenuCategoryLocation.findMany({where:{menuCategoryId:{in:menuCategoryIds}}})).map(item=>item.menuCategoryId)
+    
+    menuCategories = menuCategories.filter(item=>!disabledMenuCategoryIds.includes(item.id))
+    //find Menus
+    const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
+      where: { menuCategoryId: { in: menuCategoryIds },isArchived:false },
+    }); //filter to get menuCategorymenuarray inside many of menuCategorymenus
+    //  console.log(menuCategoryMenus)
+   
+    const menuIds = menuCategoryMenus.map((item) => item.menuId);
+    //  console.log(menuIds)
+    const disabledMenuIds = (await prisma.disabledMenuLocation.findMany({where:{id:{in:menuIds},isArchived:false}})).map(item=> item.menuId)
+
+    let menus = await prisma.menu.findMany({
+      where: { id: { in: menuIds },isArchived:false },
+    });
+    menus = menus.filter(item=> !disabledMenuIds.includes(item.id))
+
+    
+
+    //find addOnCategories
+    const addOnCategoryMenus = await prisma.addOnCategoryMenu.findMany({
+      where: { menuId: { in: menuIds },isArchived:false},
+    });
+    const addOnCategoryIds = addOnCategoryMenus.map(
+      (item) => item.addOnCategoryId
+    );
+
+    // console.log("adonC:" ,addOnCategoryIds);
+
+    const addOnCategories = await prisma.addOnCategory.findMany({
+      where: {id:{in:addOnCategoryIds},isArchived:false}
+    });
+
+    //find addons
+    const addons = await prisma.addOn.findMany({
+      where: { addOnCategoryId:{ in: addOnCategoryIds } ,isArchived:false },
+    });
+
+    //find table
+
+    // const tables = await prisma.table.findMany({
+    //   where: { locationId: { in: locationIds },isArchived:false },
+    // });
+    //  console.log("Hello")
+    return res.status(200).json({
+      menuCategories,
+      menus,
+      addOnCategories,
+      addOnCategoryMenus,
+      addons,
+      tables:[],
+      locations:[],
+      menuCategoryMenus,
+      disabledMenuCategoryLocation:[],
+      disabledMenuLocation:[]
+    });
+  }
+  else{
   if (!session) return res.status(401).send("Unauthorized");
   const name = session.user?.name as string;
   const email = session.user?.email as string;
@@ -163,7 +240,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       disabledMenuLocation
     });
   }
-  // return res.status(200).json({})
-  res.status(200).json(dbUser);
+}}
+  res.status(404).send("Method is not allowed.");
 };
-export default handle;
+export default handler;

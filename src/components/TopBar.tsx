@@ -1,6 +1,6 @@
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
-import logo from "../asserts/logo.png";
+import logo from "../assets/logo.png";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { theme } from "@/utlis/theme";
 import { Span } from "next/dist/trace";

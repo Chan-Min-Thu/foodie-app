@@ -9,7 +9,7 @@ import React from "react";
 interface Props {
   menu: Menu;
   href: string | object;
-  isAvailable:boolean;
+  isAvailable?:boolean;
 }
 
 const MenuCard = ({ menu, href,isAvailable }: Props) => {
@@ -26,7 +26,7 @@ const MenuCard = ({ menu, href,isAvailable }: Props) => {
       <Card sx={{ width: 200, height: 220, pb: 2,opacity:isAvailable?0.4:1 }}>
         <CardMedia
           sx={{ height: 140, objectFit: "contain" }}
-          image={menu.imgUrl || ""}
+          image={menu.imgUrl || "/default-menu.png"}
           component={"div"}
         />
         <CardContent>

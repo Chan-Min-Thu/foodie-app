@@ -15,8 +15,7 @@ export default async function handler(
     const { name, price, menuCategoryId,imgUrl } = req.body;
     const isValid = name && price !== undefined && menuCategoryId.length > 0;
     if (!isValid) return res.status(400).send("Bad request...");
-    // const newMenuImgUrl =
-    //   "https://media.istockphoto.com/id/1150368709/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%82%E0%B8%B2%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%94-confit.jpg?s=1024x1024&w=is&k=20&c=cVSDW5JY8uHc_kRF161aRgRPvXs7k89TEBMcx4-9Q7s=";
+    console.log(menuCategoryId)
     const menu = await prisma.menu.create({
       data: { name, price, imgUrl },
     });
@@ -31,6 +30,7 @@ export default async function handler(
     return res.status(200).json({ menu, menuCategoryMenu });
   } else if (method === "PUT") {
     const { id, name, price, menuCategoryId,isAvaliable,locationId } = req.body;
+    console.log("isAvaliable",isAvaliable)
     const isValid =
       id && name && price !== undefined && menuCategoryId.length > 0;
     // console.log("isValid", isValid);
@@ -63,6 +63,7 @@ export default async function handler(
       return res.status(200).json({disabledMenuLocation,menuCategoryMenu,menu});
     }else if(locationId && isAvaliable === true){
       const exit = await prisma.disabledMenuLocation.findFirst({where:{menuId:menu.id}})
+      if(!exit) return res.status(200).json({menuCategoryMenu,menu})
       if(exit) {
         const disabledMenuLocation = await prisma.disabledMenuLocation.deleteMany({where:{menuId:exit.id,locationId}})
         return res.status(200).json({disabledMenuLocation,menuCategoryMenu,menu});
