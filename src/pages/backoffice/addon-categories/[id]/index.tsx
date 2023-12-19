@@ -48,7 +48,6 @@ const AddonCatgoryDetails = () => {
   const addonCategory = addonCategories.find(
     (item) => item.id === addonCategoryId
   );
-//   console.log(addonCategoryId);
   const defaultAddonCategory = {
     id: Number(addonCategoryId),
     name: "",

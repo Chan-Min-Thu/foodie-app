@@ -3,6 +3,7 @@ import multer from "multer";
 import multerS3 from "multer-s3";
 import { config } from "./config";
 import  QRCode  from 'qrcode'
+import { Scale } from "@mui/icons-material";
 
 const s3Client = new S3Client({
   endpoint: config.spaceEndPoint,
@@ -24,18 +25,18 @@ export const fileUpload = multer({
   }),
 }).array("files", 1);
 
-export const generateLinkForQRCode = (companyId:number,tableId:number)=>{
-   return (`${config.orderAppUrl}?companyId=${companyId}?tableId=${tableId}`)
+export const generateLinkForQRCode = (tableId:number)=>{
+   return (`${config.orderAppUrl}?tableId=${tableId}`)
 }
 
-export const qrCodeImageUpload = async(companyId:number,tableId:number)=>{
+export const qrCodeImageUpload = async(tableId:number)=>{
   try{
     const qrImageData = await QRCode.toDataURL(
-      generateLinkForQRCode(companyId, tableId)
+      generateLinkForQRCode(tableId),{scale:30}
     );
     const input = {
       Bucket: "msquarefdc",
-      Key: `foodie-pos/chan-min-thu/qrcode/companyId-${companyId}-tableId-${tableId}.png`,
+      Key: `foodie-pos/chan-min-thu/qrcode/tableId-${tableId}.png`,
       ACL: "public-read",
       Body: Buffer.from(
         qrImageData.replace(/^data:image\/\w+;base64,/, ""),
@@ -49,6 +50,6 @@ export const qrCodeImageUpload = async(companyId:number,tableId:number)=>{
   console.log(err)
 }
 }
-export const getQrCodeUrl =(companyId:number,tableId:number)=>{
-  return(`https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/chan-min-thu/qrcode/companyId-${companyId}-tableId-${tableId}.png`)
+export const getQrCodeUrl =(tableId:number)=>{
+  return(`https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/chan-min-thu/qrcode/tableId-${tableId}.png`)
 }

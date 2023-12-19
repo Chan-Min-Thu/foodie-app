@@ -26,7 +26,6 @@ export const createAddon = createAsyncThunk(
         body: JSON.stringify({ name, price, addonCategoryId }),
       });
       const { addon } = await response.json();
-      console.log("data addon", addon);
       thunkApi.dispatch(addAddon(addon));
       onSuccess && onSuccess();
     } catch (err) {
@@ -88,7 +87,6 @@ export const addonSlice = createSlice({
       );
 
       state.items = [...otherAddons, action.payload];
-      // console.log(state.items)
     },
     removeAddon: (state, action: PayloadAction<{id:number}>) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);

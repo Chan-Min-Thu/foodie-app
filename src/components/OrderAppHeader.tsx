@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/store/hook";
 import { useEffect } from "react";
 import { fetchAppData } from "@/store/slice/appSlice";
 import React from "react";
+import HomeIcon from '@mui/icons-material/Home';
 
 interface Props {
   countCartItems: number;
@@ -14,12 +15,14 @@ interface Props {
 const OrderAppHeader = ({ countCartItems }: Props) => {
   const router = useRouter();
   const isHome = router.pathname === `/order`;
+  const isCart = router.pathname === "/order/carts";
+  const isActiveOrder = router.pathname === "/order/activeOrder";
+  const showCartIcon = !isCart && !isActiveOrder;
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "100vh/4",
         display: "flex",
         justifyContent: "center",
         flexDirection: "column ",
@@ -27,30 +30,57 @@ const OrderAppHeader = ({ countCartItems }: Props) => {
         zIndex: "5",
       }}
     >
-      <Box sx={{ position: "absolute", top: 20, right: "150px" }} onClick={()=>router.push("/order/carts")}>
-        <ShoppingCartCheckoutIcon
-          sx={{ fontSize: 30, color: "secondary.main" }}
-        />
-        <Typography
-          sx={{
-            position: "absolute",
-            top: -10,
-            right: -6,
-            color: "secondary.main",
-          }}
+      {showCartIcon ? (
+        <Box
+          sx={{ position: "absolute", top: 20, right: "150px" }}
+          onClick={() =>
+            router.push({
+              pathname: "/order/carts",
+              query: {
+                tableId: router.query.tableId,
+              },
+            })
+          }
         >
-          {countCartItems}
-        </Typography>
-      </Box>
+          <ShoppingCartCheckoutIcon
+            sx={{ fontSize: 30, color: "secondary.main" }}
+          />
+          <Typography
+            sx={{
+              position: "absolute",
+              top: -10,
+              right: -6,
+              color: "secondary.main",
+            }}
+          >
+            {countCartItems}
+          </Typography>
+        </Box>
+      ) : (
+        <Box
+          sx={{ position: "absolute", top: 20, right: "150px" }}
+          onClick={() =>
+            router.push({
+              pathname: "/order",
+              query: {
+                tableId: router.query.tableId,
+              },
+            })
+          }
+        >
+          <HomeIcon sx={{ fontSize: 30, color: "secondary.main" }}/>
+        </Box>
+      )}
       <Image
         src={orderAppHeader}
         alt="order-app-header"
-        style={{ width: "100%",padding:0,margin:0,boxSizing:"border-box", objectFit: "cover" }}
+        style={{ width: "100%", padding: 0, margin: 0, objectFit: "cover" }}
       />
       {isHome && (
         <Box
           sx={{
             width: "100%",
+            mt: 0,
             display: "flex",
             justifyContent: "center",
             flexDirection: "column",
@@ -59,7 +89,12 @@ const OrderAppHeader = ({ countCartItems }: Props) => {
         >
           <Typography
             variant="h3"
-            sx={{ fontWeight: 800, fontStyle: "italic", color: "primary.main" }}
+            sx={{
+              fontWeight: 800,
+              mt: 0,
+              fontStyle: "italic",
+              color: "primary.main",
+            }}
           >
             Ahh Wah Sarr
           </Typography>

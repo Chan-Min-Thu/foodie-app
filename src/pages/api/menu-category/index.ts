@@ -13,9 +13,9 @@ export default async function handler(
   const method = req.method;
   if (method === "POST") {
     const { name, locationId } = req.body;
-    console.log(name,locationId)
+
     const isValid = name && locationId !== undefined;
-    console.log(isValid)
+
     if (!isValid) return res.status(400).send("Bad request...");
     const location = await prisma.location.findFirst({
       where: { id: locationId },
@@ -27,28 +27,28 @@ export default async function handler(
     return res.status(200).json(menuCategory);
   }else if(method === "PUT"){
     const {id,name,isAvailable,locationId} = req.body;
-    console.log(isAvailable,locationId)
+  
     const isValid = id && name
     if(!isValid) return res.status(400).send("Bad request...");
     const exit = await prisma.menuCategory.findFirst({where:{id}})
     if(!exit) return res.status(400).send("Bad request...");
     const menuCategory = await prisma.menuCategory.update({data:{name},where:{id}})
     if(locationId && isAvailable === false){
-      const exit = await prisma.disabledMenuCategoryLocation.findFirst({where:{menuCategoryId:id}})  
+      const exit = await prisma.disabledMenuCategoryLocation.findFirst({where:{menuCategoryId:id,locationId}})  
       if(exit) return res.status(400).json({menuCategory,disabledMenuCategoryLocation:exit});
       const disabledMenuCategoryLocation = await prisma.disabledMenuCategoryLocation.create({data:{menuCategoryId:id,locationId}})
       return res.status(200).json({menuCategory,disabledMenuCategoryLocation})
     }else if(locationId && isAvailable === true){
       const exit = await prisma.disabledMenuCategoryLocation.findFirst({where:{menuCategoryId:id}})  
-      console.log(exit)
+      
       if(exit){
       const disabledMenuCategoryLocation = await prisma.disabledMenuCategoryLocation.deleteMany({where:{menuCategoryId:id }})
       return res.status(200).json({menuCategory,disabledMenuCategoryLocation})
       
     }
-   }else{
-    return res.status(200).json(menuCategory)
    }
+   const disabledMenuCategoryLocation = await prisma.disabledMenuCategoryLocation.findMany({where:{menuCategoryId:id}})
+   return res.status(200).json({menuCategory,disabledMenuCategoryLocation})
   }else if(method === "DELETE"){
      const { id } = req.query;
      const  menuCategoryId = Number(id);

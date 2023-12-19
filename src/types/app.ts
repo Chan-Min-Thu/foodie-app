@@ -7,6 +7,5 @@ export interface AppSlice {
 }
 
 export interface AppOption extends BasicOptions {
-   companyId?:number,
    tableId?:number
 }

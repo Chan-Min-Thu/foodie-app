@@ -1,6 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { disabledMenuCategoryLocation } from "@/types/disabledMenuCategoryLocation";
 import { disabledMenuLocationSlice } from "@/types/disabledMenuLocation";
+import { DisabledMenuLocation } from "@prisma/client";
+import { act } from "react-dom/test-utils";
 
 const initialState: disabledMenuLocationSlice = {
   items: [],
@@ -15,8 +17,14 @@ export const disabledMenuCategoryLocationSlice = createSlice({
     setDisabledMenuLocation: (state, action) => {
       state.items = action.payload;
     },
-    addDisabledMenuLocation: (state, action) => {
-      state.items = [...state.items, action.payload];
+    addDisabledMenuLocation: (state, action:PayloadAction<DisabledMenuLocation>) => {
+      const exit= state.items.find(item=> item.id === action.payload.id)
+      if(!exit){
+        state.items = [...state.items, action.payload];
+      }else{
+        const filteredItems = state.items.filter(item=> item.id !== action.payload.id)
+        state.items = [...filteredItems,action.payload]
+      } 
     },
     removeDisabledMenuLocation: (state, action:PayloadAction<{id:number}>) => {
       const {id} = action.payload;

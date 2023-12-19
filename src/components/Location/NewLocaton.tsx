@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/store/hook";
 import { createLocation } from "@/store/slice/locationSlice";
 import { snackBarOpen } from "@/store/slice/snackBarSlice";
+import { AddReaction } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, DialogTitle, TextField } from "@mui/material"
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -33,7 +34,7 @@ const NewLocation = ({open,setOpen}:Props)=>{
             </DialogContent>
             <DialogContent sx={{display:"flex",justifyContent:"flex-end"}}>
                 <Button variant="contained" sx={{mr:2}} onClick={()=>setOpen(false)}>Cancel</Button>
-                <Button variant="contained" disabled={!name && !address} onClick={()=>handleCreateLocation}>Comfirm</Button>
+                <Button variant="contained"  onClick={()=>handleCreateLocation()}>Comfirm</Button>
             </DialogContent>
         </Dialog>
     )

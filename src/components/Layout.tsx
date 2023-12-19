@@ -17,7 +17,8 @@ interface Props {
 }
 const Layout = ({ children }: Props) => {
     const router = useRouter();
-  const orderLink = router.pathname === "/order";
+    const {tableId } = router.query;
+  const orderLink = tableId
   const BackofficeLink = router.pathname.includes("/backoffice")
   if(orderLink){
     return(<Box>

@@ -30,7 +30,7 @@ export default async function handler(
   }else if(method === "PUT"){
     const {id,name,menuId,isRequired = true} = req.body
     const isValid = id && name && menuId.length>0
-    // console.log("addonCategory",isValid)
+
     if(!isValid) return res.status(401).send("Bad request...");
     const addonCategory = await prisma.addOnCategory.update({where:{id},data:{name,isRequired}})
     await prisma.addOnCategoryMenu.deleteMany({where:{addOnCategoryId:id}})

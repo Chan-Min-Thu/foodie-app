@@ -27,7 +27,6 @@ export const createTable = createAsyncThunk(
         body: JSON.stringify({ name,locationId }),
       });
       const { table } = await response.json();
-      // console.log("data addon", table);
       thunkApi.dispatch(addTable(table));
       onSuccess && onSuccess();
     } catch (err) {
@@ -89,7 +88,6 @@ export const tableSlice = createSlice({
       );
 
       state.items = [...otherTables, action.payload];
-      // console.log(state.items)
     },
     removeTable: (state, action: PayloadAction<{id:number}>) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);

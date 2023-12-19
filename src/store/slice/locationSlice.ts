@@ -1,10 +1,12 @@
 import { CreateLocationOptions, Locations } from "@/types/location";
 import { config } from "@/utlis/config";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Location } from "@prisma/client";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
 const initialState: Locations ={
     items:[],
+    selectedLocation:null,
     isLoading:false,
     error:null
 }
@@ -30,11 +32,14 @@ export const locationSlice = createSlice({
       setLocation:(state,action)=>{
          state.items = action.payload
       },
+      selectedLocation:(state,action:PayloadAction<Location>)=>{
+        state.selectedLocation = action.payload
+      },
       addLocation:(state,action)=>{
         state.items = [...state.items,action.payload]
       }
     }
 })
 
-export const { setLocation,addLocation } = locationSlice.actions;
+export const { setLocation,addLocation,selectedLocation } = locationSlice.actions;
 export  default locationSlice.reducer

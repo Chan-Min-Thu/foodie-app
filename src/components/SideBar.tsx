@@ -25,7 +25,7 @@ interface Props {
 
 const SideBar = ({ open ,setOpen}: Props) => {
     const matches = useMediaQuery(theme.breakpoints.between("xs","sm"))
-    console.log("sidebar",open)
+
     return (
       <Box
         sx={{

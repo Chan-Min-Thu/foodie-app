@@ -9,6 +9,7 @@ import { theme } from "@/utlis/theme";
 import GoogleIcon from "@mui/icons-material/Google"
 import Home from "@/pages";
 import { useRouter } from "next/router";
+import { Location } from "@prisma/client";
 // import { init } from "next/dist/compiled/webpack/webpack";
 
 interface Props {
@@ -18,6 +19,7 @@ const BackofficeLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter()
   const [open, setOpen] = useState(false);
+
   const matches = useMediaQuery(theme.breakpoints.between("xs", "sm"));
   useEffect(() => {
     setOpen(open);
@@ -25,7 +27,7 @@ const BackofficeLayout = ({ children }: Props) => {
 
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((state) => state.app);
-
+ 
   useEffect(() => {
     if (session && !init) dispatch(fetchAppData({}));
   }, [session,init]);

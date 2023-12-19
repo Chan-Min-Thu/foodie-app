@@ -6,36 +6,41 @@ import { prisma } from "@/utlis/db";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if(req.method === "GET"){
-  console.log(req.query);
-  const companyId= Number(req.query.companyId);
+
   const tableId = Number(req.query.tableId)
-  const isOrderAppRequest = companyId && tableId;
-  console.log("isOrderAppR",companyId,tableId)
+  const isOrderAppRequest =  tableId;
+ 
   if(isOrderAppRequest){
+    //find table
+
+    const table = await prisma.table.findFirst({
+      where: { id:tableId,isArchived:false },
+    });
     // find locationIds
-    const locations = await prisma.location.findMany({ where: { companyId:Number(companyId),isArchived:false } });
-    const locationIds = locations.map((item) => item.id);
+    const locationId = table?.locationId
+    const location = await prisma.location.findFirst({ where:{id:locationId,isArchived:false }});
+    const companyId = location?.companyId
+    // const locationIds = locations.map((item) => item.id);
 
     //find MenuCategories
     let menuCategories = await prisma.menuCategory.findMany({
-      where: { companyId:Number(companyId),isArchived:false },
+      where: { companyId,isArchived:false },
     });
     const menuCategoryIds = menuCategories.map((item) => item.id);
     
     //find DisabledMenuCategoryLocation
-
-    const disabledMenuCategoryIds  = (await prisma.disabledMenuCategoryLocation.findMany({where:{menuCategoryId:{in:menuCategoryIds}}})).map(item=>item.menuCategoryId)
-    
+    const disabledMenuCategoryIds  = (await prisma.disabledMenuCategoryLocation.findMany({where:{locationId}})).map(item=>item.menuCategoryId)
+    // console.log("d",disabledMenuCategoryIds)
     menuCategories = menuCategories.filter(item=>!disabledMenuCategoryIds.includes(item.id))
     //find Menus
     const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
       where: { menuCategoryId: { in: menuCategoryIds },isArchived:false },
     }); //filter to get menuCategorymenuarray inside many of menuCategorymenus
-    //  console.log(menuCategoryMenus)
+  
    
     const menuIds = menuCategoryMenus.map((item) => item.menuId);
-    //  console.log(menuIds)
-    const disabledMenuIds = (await prisma.disabledMenuLocation.findMany({where:{id:{in:menuIds},isArchived:false}})).map(item=> item.menuId)
+
+    const disabledMenuIds = (await prisma.disabledMenuLocation.findMany({where:{locationId,isArchived:false}})).map(item=> item.menuId)
 
     let menus = await prisma.menu.findMany({
       where: { id: { in: menuIds },isArchived:false },
@@ -52,7 +57,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       (item) => item.addOnCategoryId
     );
 
-    // console.log("adonC:" ,addOnCategoryIds);
 
     const addOnCategories = await prisma.addOnCategory.findMany({
       where: {id:{in:addOnCategoryIds},isArchived:false}
@@ -63,12 +67,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { addOnCategoryId:{ in: addOnCategoryIds } ,isArchived:false },
     });
 
-    //find table
-
-    // const tables = await prisma.table.findMany({
-    //   where: { locationId: { in: locationIds },isArchived:false },
-    // });
-    //  console.log("Hello")
+    
+  
     return res.status(200).json({
       menuCategories,
       menus,
@@ -87,7 +87,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const name = session.user?.name as string;
   const email = session.user?.email as string;
   const dbUser = await prisma.user.findUnique({ where: { email } });
-  // console.log("unique",dbUser)
+
   if (!dbUser) {
     //1. create new company and assign to newUser
     const newCompanyName = "Shwe Mandalay";
@@ -105,10 +105,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     //4.create new Menu
     const newMenuName = "Default Menu";
-    const newMenuImgUrl =
-      "https://media.istockphoto.com/id/1150368709/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%82%E0%B8%B2%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%94-confit.jpg?s=1024x1024&w=is&k=20&c=cVSDW5JY8uHc_kRF161aRgRPvXs7k89TEBMcx4-9Q7s=";
+    
     const menu = await prisma.menu.create({
-      data: { name: newMenuName, price: 1000, imgUrl: newMenuImgUrl },
+      data: { name: newMenuName, price: 1000,imgUrl:""},
     });
 
     //5.create a MenuCategoryMenu
@@ -193,9 +192,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
       where: { menuCategoryId: { in: menuCategoryIds },isArchived:false },
     }); //filter to get menuCategorymenuarray inside many of menuCategorymenus
-    //  console.log(menuCategoryMenus)
+   
     const menuIds = menuCategoryMenus.map((item) => item.menuId);
-    //  console.log(menuIds)
     const menus = await prisma.menu.findMany({
       where: { id: { in: menuIds },isArchived:false },
     });
@@ -209,8 +207,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const addOnCategoryIds = addOnCategoryMenus.map(
       (item) => item.addOnCategoryId
     );
-
-    // console.log("adonC:" ,addOnCategoryIds);
 
     const addOnCategories = await prisma.addOnCategory.findMany({
       where: {id:{in:addOnCategoryIds},isArchived:false}
@@ -226,7 +222,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const tables = await prisma.table.findMany({
       where: { locationId: { in: locationIds },isArchived:false },
     });
-    //  console.log("Hello")
     return res.status(200).json({
       menuCategories,
       menus,

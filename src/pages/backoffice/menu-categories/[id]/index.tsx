@@ -46,7 +46,7 @@ const MenuCategoryDetails = () => {
       };
       setMenuCategory(defaultMenuCategory);
     }
-  }, [currentmenuCategory,menuCategories]);
+  }, [menuCategories,disabledMenuCategoryLocations]);
 
   if (!menuCategory) return null;
   const handleUpdateMenuCategory = () => {

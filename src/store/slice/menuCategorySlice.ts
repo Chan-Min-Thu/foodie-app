@@ -29,9 +29,7 @@ export const createMenuCategory = createAsyncThunk(
         body: JSON.stringify({ name, locationId }),
       });
       const menuCategory = await response.json();
-      console.log("menuCategory", menuCategory);
       thunkApi.dispatch(addMenuCategory(menuCategory));
-      console.log("onSuccess", onSuccess);
       onSuccess && onSuccess();
     } catch (error) {
       isError && isError(error);
@@ -45,17 +43,16 @@ export const updateMenuCategory = createAsyncThunk(
   "menuCategory/updateMenuCategory",
   async (options: UpdateMenuCategoryOptions, thunkApi) => {
     const { id, name, isAvailable, locationId, onSuccess, isError } = options;
-    console.log(isAvailable)
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu-category`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, name, isAvailable, locationId }),
       });
-      const data = await response.json();
-      thunkApi.dispatch(replaceMenuCategory(data.menuCategory));
+      const {menuCategory,disabledMenuCategoryLocation} = await response.json();
+      thunkApi.dispatch(replaceMenuCategory(menuCategory));
       if(isAvailable === false){
-        thunkApi.dispatch(addDisabledMenuCategoryLocation(data.disabledMenuCategoryLocation))
+        thunkApi.dispatch(addDisabledMenuCategoryLocation(disabledMenuCategoryLocation))
       }else{
         thunkApi.dispatch(removeDisabledMenuCategoryLocation({id}))
       }

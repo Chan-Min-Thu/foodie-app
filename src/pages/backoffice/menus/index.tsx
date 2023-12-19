@@ -13,7 +13,6 @@ const Menus = () => {
   const menus = useAppSelector((state) => state.menu.items);
   const disabledMenuLocations = useAppSelector((state)=>state.disabledMenuLocation.items)
   if(!menus) return null;
-  console.log(menus)
   return (
     <Box sx={{width:matches? "100%":"80vw"}}>
       <Box sx={{display:"flex",justifyContent:"flex-end" }}>
@@ -23,7 +22,7 @@ const Menus = () => {
       </Box>
       <Box sx={{display:"flex",flexWrap:"wrap"}}>
         {menus?.map((item) => {
-          const exit = disabledMenuLocations.find(i=> i.menuId === item.id)
+          const exit = disabledMenuLocations.find(i=> i.menuId === item.id && i.locationId === Number(localStorage.getItem("selectedlocationId")) )
           const isAvailable = exit ? true: false;
         return <MenuCard key={item.id} menu={item} isAvailable={isAvailable} href={`menus/${item.id}`}/>
         }

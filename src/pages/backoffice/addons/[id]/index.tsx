@@ -62,7 +62,6 @@ const AddonDetails = () => {
 
   const handleChange = (evt: SelectChangeEvent<number>) => {
     const addonCategoryId = evt.target.value as number;
-    console.log(addonCategoryId);
     setData({ ...data, addonCategoryId });
   };
   const handleUpdateAddon = () => {

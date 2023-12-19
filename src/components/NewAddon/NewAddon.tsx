@@ -42,7 +42,7 @@ const NewAddon = ({ open, setOpen }: Props) => {
           autoHideDuration: 3000,
         })
       );
-      console.log(newAddon)
+
     setOpen(false)
     dispatch(
       createAddon({

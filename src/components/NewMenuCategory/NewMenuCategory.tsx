@@ -20,23 +20,11 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     const locationId = localStorage.getItem("selectedlocationId");
-    console.log("locationId", locationId);
     setSelectedLocationId(Number(locationId));
   }, [selectedLocationId]);
 
-  // const selectedLocationId = Number(localStorage.getItem("selectedlocationId"))
   const dispatch = useAppDispatch();
-//   const onSuccess = () => {
-//     setOpen(false);
-//     dispatch(
-//       snackBarOpen({
-//         message: "New Menu category created succcessfully.",
-//         severity: "success",
-//         open: true,
-//         autoHideDuration: 3000,
-//       })
-//     );
-//   };
+
 
   const handleCreateMenuCategory = () => {
     dispatch(

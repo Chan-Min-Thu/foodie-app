@@ -14,7 +14,6 @@ export const createMenu = createAsyncThunk(
   "menu,createMenu",
   async (options: CreateMenuOptions, thunkApi) => {
     const { name, price, menuCategoryId,imgUrl, onSuccess, isError } = options;
-    console.log(imgUrl)
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "POST",
@@ -24,7 +23,6 @@ export const createMenu = createAsyncThunk(
         body: JSON.stringify({ name, price, menuCategoryId ,imgUrl}),
       });
       const data = await response.json();
-      console.log("menu",data.menu)
       thunkApi.dispatch(addMenu(data.menu));
       onSuccess && onSuccess();
     } catch (error) {
@@ -47,7 +45,6 @@ export const updateMenu = createAsyncThunk(
         body: JSON.stringify({ id, name, price, menuCategoryId,isAvaliable,locationId }),
       });
       const data = await response.json(); // backend return value is {menu,menuCategoryMenu}
-      console.log(data.menu)
       thunkApi.dispatch(replaceMenu(data.menu));
       if(isAvaliable === false){
         return thunkApi.dispatch(addDisabledMenuLocation(data.disabledMenuLocation))
@@ -93,9 +90,12 @@ export const menuSlice = createSlice({
     },
     removeMenu:(state,action:PayloadAction<{id :number}>)=>{
       state.items = state.items.filter(item=> item.id !== action.payload.id)
+    },
+    setIsLoading:(state,action:PayloadAction<boolean>)=>{
+      state.isLoading = action.payload;
     }
   },
 });
 
-export const { setMenu, addMenu, replaceMenu,removeMenu } = menuSlice.actions;
+export const { setMenu, addMenu, replaceMenu,removeMenu,setIsLoading } = menuSlice.actions;
 export default menuSlice.reducer;

@@ -58,13 +58,10 @@ const MenuDetails = () => {
       menuCategoryId: menuCategoryIdFromServer
     });
   }
-  }, [menu]);
-  console.log(data?.isAvaliable)
+  }, [menu,disabledMenuLocation]);
   if (!menu || !data) return null;
   const handleChange = (evt: SelectChangeEvent<number[]>) => {
-    console.log(evt.target.value);
     setMenuCategoryId(evt.target.value as number[]);
-    console.log("menuCategoryId", menuCategoryId);
   };
 
   const handleUpdateMenu = () => {
@@ -194,7 +191,7 @@ const MenuDetails = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControlLabel control={<Switch defaultChecked={data.isAvaliable} onChange={(evt,value)=>setData({...data,isAvaliable:value})} />} label="Label" />
+        <FormControlLabel control={<Switch defaultChecked={data.isAvaliable} onChange={(evt,value)=>setData({...data,isAvaliable:value})} />} label="Available" />
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           <Button
             variant="contained"

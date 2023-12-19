@@ -37,7 +37,6 @@ export const updateAddonCategory = createAsyncThunk("addonCategory/updateAddonCa
     body:JSON.stringify({id,name,menuId,isRequired})
   })
   const data = await response.json();
-  console.log("addonC",data)
   thunkApi.dispatch(replaceAddonCategory(data.addonCategory))
   onSuccess && onSuccess();
 }catch(err){

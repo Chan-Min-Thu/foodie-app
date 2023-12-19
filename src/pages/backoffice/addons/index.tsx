@@ -12,7 +12,6 @@ const Addons = ()=>{
     const [open,setOpen]= useState(false);
     const matches =useMediaQuery(theme.breakpoints.between("xs","md"))
     const addons = useAppSelector(state=>state.addon.items)
-    console.log(addons)
     return(
         <Box sx={{width:matches? "100%":"80vw"}}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

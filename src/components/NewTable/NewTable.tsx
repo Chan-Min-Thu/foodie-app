@@ -18,38 +18,16 @@ interface Props {
 const NewTable = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const [newTable, setNewTable] = useState<CreateTableOptions>();
-  const defalutTable = { name: "",
-  locationId: Number(localStorage.getItem("selectedlocationId")),}
   useEffect(() => {
     if (!newTable) {
-      setNewTable(defalutTable);
+      setNewTable({ 
+        name: "",
+        locationId: Number(localStorage.getItem("selectedlocationId"))
+    });
     }
-  }, []);
-  //   if (!newTable) return null;
-  //   const handleCreateTable = () => {
-  //     if(!newTable.name) return dispatch(snackBarClose({
-  //         message:"Error occoured data doesn't complete.",
-  //         severity:"error",
-  //         open:true,
-  //         autoHideDuration:3000
-  //     }))
-  //     dispatch(
-  //       createTable({
-  //         ...newTable,
-  //         onSuccess: () => {
-  //           dispatch(
-  //             snackBarOpen({
-  //               message: "New addon created successfully.",
-  //               severity: "success",
-  //               open: true,
-  //               autoHideDuration: 3000,
-  //             })
-  //           );
-  //         },
-  //       })
-  //     );
-  //   };
-  //   console.log(open)
+  }, [newTable]);
+  
+
   if (!newTable) return null;
 
   const handleCreateTable = () => {
@@ -77,7 +55,10 @@ const NewTable = ({ open, setOpen }: Props) => {
         },
       })
     );
-    setNewTable(defalutTable);
+    setNewTable({ 
+    name: "",
+    locationId: Number(localStorage.getItem("selectedlocationId"))
+});
     setOpen(false);
   };
   return (
