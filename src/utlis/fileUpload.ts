@@ -1,8 +1,12 @@
-import { PutObjectCommand,S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { config } from "./config";
-import  QRCode  from 'qrcode'
+import QRCode from "qrcode";
 import { Scale } from "@mui/icons-material";
 
 const s3Client = new S3Client({
@@ -25,15 +29,15 @@ export const fileUpload = multer({
   }),
 }).array("files", 1);
 
-export const generateLinkForQRCode = (tableId:number)=>{
-   return (`${config.orderAppUrl}?tableId=${tableId}`)
-}
+export const generateLinkForQRCode = (tableId: number) => {
+  return `${config.orderAppUrl}?tableId=${tableId}`;
+};
 
-export const qrCodeImageUpload = async(tableId:number)=>{
-  try{
-    const qrImageData = await QRCode.toDataURL(
-      generateLinkForQRCode(tableId),{scale:30}
-    );
+export const qrCodeImageUpload = async (tableId: number) => {
+  try {
+    const qrImageData = await QRCode.toDataURL(generateLinkForQRCode(tableId), {
+      scale: 30,
+    });
     const input = {
       Bucket: "msquarefdc",
       Key: `foodie-pos/chan-min-thu/qrcode/tableId-${tableId}.png`,
@@ -46,10 +50,22 @@ export const qrCodeImageUpload = async(tableId:number)=>{
     // @ts-ignore
     const command = new PutObjectCommand(input);
     await s3Client.send(command);
-}catch(err){
-  console.log(err)
-}
-}
-export const getQrCodeUrl =(tableId:number)=>{
-  return(`https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/chan-min-thu/qrcode/tableId-${tableId}.png`)
-}
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const getQrCodeUrl = (tableId: number) => {
+  return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/foodie-pos/chan-min-thu/qrcode/tableId-${tableId}.png`;
+};
+export const deleteQrCodeImage = async (assetUrl: string) => {
+  try {
+    const input = {
+      Bucket: "msquarefdc",
+      Key: assetUrl.split(".com/")[1],
+    };
+    const command = new DeleteObjectCommand(input);
+    await s3Client.send(command);
+  } catch (err) {
+    console.log(err);
+  }
+};

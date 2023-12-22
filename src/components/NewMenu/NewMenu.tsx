@@ -80,7 +80,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
       });
       const { assetUrl } = await response.json();
       newMenuPayload.imgUrl = assetUrl;
-      dispatch(
+      await dispatch(
         createMenu({
           ...newMenuPayload,
           onSuccess: () => {

@@ -3,6 +3,7 @@ import { config } from "@/utlis/config";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setAddonCategoryMenu } from "./addonCategoryMenuSlice";
 import { addDisabledMenuLocation, removeDisabledMenuLocation } from "./disabledMenuLocation";
+import { setMenuCategoryMenu } from "./menuCategoryMenuSlice";
 
 const initialState: Menus = {
   items: [],
@@ -24,6 +25,7 @@ export const createMenu = createAsyncThunk(
       });
       const data = await response.json();
       thunkApi.dispatch(addMenu(data.menu));
+      thunkApi.dispatch(setMenuCategoryMenu(data.menuCategoryMenu))
       onSuccess && onSuccess();
     } catch (error) {
       isError && isError(error);
@@ -35,17 +37,18 @@ export const createMenu = createAsyncThunk(
 export const updateMenu = createAsyncThunk(
   "menu/updateMenu",
   async (options: UpdateMenuOptions, thunkApi) => {
-    const { id, name, price, menuCategoryId, isAvaliable,locationId,onSuccess, isError } = options;
+    const { id, name, price, menuCategoryId,imgUrl, isAvaliable,locationId,onSuccess, isError } = options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "PUT",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ id, name, price, menuCategoryId,isAvaliable,locationId }),
+        body: JSON.stringify({ id, name, price, menuCategoryId,isAvaliable,locationId,imgUrl }),
       });
       const data = await response.json(); // backend return value is {menu,menuCategoryMenu}
       thunkApi.dispatch(replaceMenu(data.menu));
+      // thunkApi.dispatch(setMenuCategoryMenu(data.menuCategoryMenu))
       if(isAvaliable === false){
         return thunkApi.dispatch(addDisabledMenuLocation(data.disabledMenuLocation))
       }else if(isAvaliable === true){

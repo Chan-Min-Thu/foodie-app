@@ -14,6 +14,7 @@ const MenuDetails = () => {
   const {query,isReady, ...router } = useRouter();
   const carts = useAppSelector((state) => state.carts.items);
   const cartId = String(query.itemId);
+  const tableId = query.tableId;
   const cart= carts.find((item)=> item.id === cartId)
   const menuId = Number(query.id);
   const menus = useAppSelector((state) => state.menu.items);
@@ -78,7 +79,7 @@ const MenuDetails = () => {
     dispatch(setCarts(newCart));
     router.push({
       pathname,
-      query
+      query:{tableId}
     });
   };
   return (

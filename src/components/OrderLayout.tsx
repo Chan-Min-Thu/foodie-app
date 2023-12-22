@@ -13,6 +13,8 @@ const OrderLayout =({children}:Props)=>{
   const router = useRouter();
   const tableId = Number(router.query.tableId);
   const menuId = Number(router.query.id)
+  const isCart = router.pathname === "/order/carts";
+  const isActiveOrder = router.pathname === "/order/active-order";
   const isHome =  tableId
   const isMenu =  menuId && tableId
   const carts = useAppSelector(state=>state.carts.items)
@@ -26,8 +28,8 @@ const OrderLayout =({children}:Props)=>{
     return(
       <Box>
         <OrderAppHeader countCartItems={carts.length}/>
-        <Box sx={{position:"relative",zIndex:5,top:isHome&& 350 || isMenu && 100}}>
-          <Box sx={{width : {xs:"100%",md:"80%",lg:"55%"},m:"0 auto"}}>
+        <Box sx={{position:"relative",zIndex:3,top:isHome?350 : 50}}>
+          <Box sx={{width : {xs:"100%",md:"80%",lg:"55%"},mx:"auto"}}>
             {children}
           </Box>
         </Box>

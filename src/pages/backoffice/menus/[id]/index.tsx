@@ -22,9 +22,12 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Image from "next/image";
 import { MenuCategory } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { FireExtinguisher } from "@mui/icons-material";
+import { config } from "@/utlis/config";
 
 const MenuDetails = () => {
   const dispatch = useAppDispatch();
@@ -35,9 +38,13 @@ const MenuDetails = () => {
   const menuCategoryMenu = useAppSelector(
     (state) => state.menuCategoryMenu.items
   );
-  
-  const disabledMenuLocations = useAppSelector((state)=>state.disabledMenuLocation.items);
-  const disabledMenuLocation = disabledMenuLocations.find(i=> i.menuId === Number(menuId))
+
+  const disabledMenuLocations = useAppSelector(
+    (state) => state.disabledMenuLocation.items
+  );
+  const disabledMenuLocation = disabledMenuLocations.find(
+    (i) => i.menuId === Number(menuId)
+  );
   const menuCategoryIdFromServer = menuCategoryMenu
     .filter((menu) => menu.menuId === Number(menuId))
     .map((item) => item.menuCategoryId);
@@ -49,16 +56,16 @@ const MenuDetails = () => {
     menuCategoryIdFromServer
   );
   useEffect(() => {
-  if(menu){
-    setData({
-      id: Number(menuId),
-      name: menu?.name,
-      price: menu?.price,
-      isAvaliable:disabledMenuLocation ? false:true,
-      menuCategoryId: menuCategoryIdFromServer
-    });
-  }
-  }, [menu,disabledMenuLocation]);
+    if (menu) {
+      setData({
+        id: Number(menuId),
+        name: menu?.name,
+        price: menu?.price,
+        isAvaliable: disabledMenuLocation ? false : true,
+        menuCategoryId: menuCategoryIdFromServer,
+      });
+    }
+  }, [menu, disabledMenuLocation]);
   if (!menu || !data) return null;
   const handleChange = (evt: SelectChangeEvent<number[]>) => {
     setMenuCategoryId(evt.target.value as number[]);
@@ -71,10 +78,9 @@ const MenuDetails = () => {
         name: data.name,
         price: data.price,
         menuCategoryId,
-        isAvaliable:data.isAvaliable,
-        locationId:Number(localStorage.getItem("selectedlocationId")),
+        isAvaliable: data.isAvaliable,
+        locationId: Number(localStorage.getItem("selectedlocationId")),
         onSuccess: () => {
-          
           dispatch(
             snackBarOpen({
               message: "New menu updated succcessfully.",
@@ -89,23 +95,39 @@ const MenuDetails = () => {
     router.push("/backoffice/menus");
   };
 
-  
   const handleDeleteMenu = () => {
     dispatch(
       deleteMenu({
         id: Number(menuId),
-        onSuccess: () =>{
+        onSuccess: () => {
           router.push("/backoffice/menus"),
-          dispatch(snackBarOpen({
-            message:"This menu is successfully deleted.",
-            severity: "success",
-            open: true,
-            autoHideDuration: 3000,
-          }))
-      }
+            dispatch(
+              snackBarOpen({
+                message: "This menu is successfully deleted.",
+                severity: "success",
+                open: true,
+                autoHideDuration: 3000,
+              })
+            );
+        },
       })
     );
   };
+  const handleImageUpload =async (event:ChangeEvent<HTMLInputElement>)=>{
+    const files = event.target.files
+    if(files){
+      const file = files[0]
+      const formData = new FormData();
+      formData.append("files", file);
+      const response = await fetch(`${config.apiBaseUrl}/asset`, {
+        method: "POST",
+        body: formData,
+      });
+      const { assetUrl } = await response.json();
+     assetUrl && dispatch(updateMenu({...data,imgUrl:assetUrl}))
+
+    }
+  }
 
   return (
     <Box
@@ -126,6 +148,24 @@ const MenuDetails = () => {
         </Button>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box sx={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center"}}>
+          <Image
+            width={200}
+            height={200}
+            style={{
+              borderRadius: "50%",
+              margin: "0 auto 5px",
+              paddingTop: "-200px",
+              
+            }}
+            src={menu?.imgUrl || "/default-menu.png"}
+            alt="menu-image"
+          />
+          <Button variant="contained" component="label" sx={{width:"fit-content"}}>
+            Upload
+            <input type="file" hidden onChange={handleImageUpload}/>
+          </Button>
+        </Box>
         <TextField
           id="outlined-basic"
           sx={{ minWidth: 400, mt: 2 }}
@@ -191,7 +231,17 @@ const MenuDetails = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControlLabel control={<Switch defaultChecked={data.isAvaliable} onChange={(evt,value)=>setData({...data,isAvaliable:value})} />} label="Available" />
+        <FormControlLabel
+          control={
+            <Switch
+              defaultChecked={data.isAvaliable}
+              onChange={(evt, value) =>
+                setData({ ...data, isAvaliable: value })
+              }
+            />
+          }
+          label="Available"
+        />
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           <Button
             variant="contained"
@@ -217,8 +267,8 @@ const MenuDetails = () => {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>Comfirm Delete Menu</DialogTitle>
-        <DialogContent sx={{p:2}}>
-          <DialogContentText sx={{p:2}} id="alert-dialog-slide-description">
+        <DialogContent sx={{ p: 2 }}>
+          <DialogContentText sx={{ p: 2 }} id="alert-dialog-slide-description">
             Are you sure you want to delete this Menu?
           </DialogContentText>
         </DialogContent>

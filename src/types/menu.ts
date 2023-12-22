@@ -22,7 +22,8 @@ export  interface UpdateMenuOptions extends BasicOptions{
     price?:number,
     menuCategoryId:number[],
     isAvaliable?:boolean,
-    locationId?:number
+    locationId?:number,
+    imgUrl?:string | null
 }
 export  interface DeleteMenuOptions extends BasicOptions{
     id:number,

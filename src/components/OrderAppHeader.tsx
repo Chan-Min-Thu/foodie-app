@@ -14,6 +14,7 @@ interface Props {
 }
 const OrderAppHeader = ({ countCartItems }: Props) => {
   const router = useRouter();
+  const tableId = router.query.tableId
   const isHome = router.pathname === `/order`;
   const isCart = router.pathname === "/order/carts";
   const isActiveOrder = router.pathname === "/order/activeOrder";
@@ -32,7 +33,7 @@ const OrderAppHeader = ({ countCartItems }: Props) => {
     >
       {showCartIcon ? (
         <Box
-          sx={{ position: "absolute", top: 20, right: "150px" }}
+          sx={{ position: "absolute",zIndex:3, top: 20, right: "150px" }}
           onClick={() =>
             router.push({
               pathname: "/order/carts",
@@ -63,7 +64,7 @@ const OrderAppHeader = ({ countCartItems }: Props) => {
             router.push({
               pathname: "/order",
               query: {
-                tableId: router.query.tableId,
+                tableId,
               },
             })
           }
