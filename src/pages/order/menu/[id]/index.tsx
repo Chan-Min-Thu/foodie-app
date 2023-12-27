@@ -5,10 +5,11 @@ import { AddOn } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { genereteRandomIds } from "../../../../general/general";
+import { genereteRandomIds } from "../../../../utlis/general/general";
 import { CartItems } from "@/types/cart";
 import { setCarts } from "@/store/slice/cartSlice";
 import QuantitySelector from "@/components/QuatintySelector";
+import { nanoid } from "nanoid";
 
 const MenuDetails = () => {
   const {query,isReady, ...router } = useRouter();
@@ -70,7 +71,7 @@ const MenuDetails = () => {
 
   const handleCarts = () => {
     const newCart: CartItems = {
-      id: cart ? cart.id :String(genereteRandomIds()),
+      id: cart ? cart.id :nanoid(7),
       menu: menu,
       addons: selectedAddons,
       quantity: value,

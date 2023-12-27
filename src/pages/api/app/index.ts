@@ -67,7 +67,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { addOnCategoryId:{ in: addOnCategoryIds } ,isArchived:false },
     });
 
-    
+    //find tableIds 
+    const tableIds = (await prisma.table.findMany({where:{locationId:locationId}})).map((item)=>item.id) 
+
+    //find orders 
+    const orders = await prisma.order.findMany({where:{tableId:{in:tableIds}}})
   
     return res.status(200).json({
       menuCategories,
@@ -76,6 +80,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       addOnCategoryMenus,
       addons,
       tables:[],
+      orders,
       locations:[],
       menuCategoryMenus,
       disabledMenuCategoryLocation:[],
@@ -222,6 +227,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const tables = await prisma.table.findMany({
       where: { locationId: { in: locationIds },isArchived:false },
     });
+    const tableIds = tables.map(item=> item.id);
+
+    const orders = await prisma.order.findMany({where:{tableId:{in:tableIds}}})
     return res.status(200).json({
       menuCategories,
       menus,
@@ -230,6 +238,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       addons,
       tables,
       locations,
+      orders,
       menuCategoryMenus,
       disabledMenuCategoryLocation,
       disabledMenuLocation

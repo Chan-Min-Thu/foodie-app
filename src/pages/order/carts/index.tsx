@@ -1,4 +1,4 @@
-import { generalTotalPrice } from "@/general/general";
+import { generalTotalPrice } from "@/utlis/general/general";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { emptyCarts, removeCarts } from "@/store/slice/cartSlice";
 import { createOrder } from "@/store/slice/orderSlice";

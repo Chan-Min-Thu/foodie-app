@@ -4,7 +4,7 @@ import {
   DeleteAddonOption,
   UpdateAddonOption,
 } from "@/types/addon";
-import { CreateOrder, Orders } from "@/types/order";
+import { CreateOrder, Orders, UpdateOrder } from "@/types/order";
 import {
   CreateTableOptions,
   DeleteTableOptions,
@@ -14,7 +14,6 @@ import {
 import { config } from "@/utlis/config";
 import { AddOn, Order, Table } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { json } from "stream/consumers";
 
 const initialState: Orders = {
   items: [],
@@ -23,7 +22,7 @@ const initialState: Orders = {
 };
 
 export const createOrder = createAsyncThunk(
-  "table/createTable",
+  "order/createOrder",
   async (option: CreateOrder, thunkApi) => {
     const { tableId, cartItems, onSuccess, isError } = option;
     try {
@@ -41,6 +40,28 @@ export const createOrder = createAsyncThunk(
   }
 );
 
+export const updateOrder = createAsyncThunk(
+  "order/UpdateOrder",
+  async (options: UpdateOrder, thunkApi) => {
+    const { itemId, status, onSuccess, isError } = options;
+    try {
+      const response = await fetch(
+        `${config.apiBaseUrl}/order?itemId=${itemId}`,
+        {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ status }),
+        }
+      );
+      const {orders} = await response.json();
+      thunkApi.dispatch(updateOrderItem(orders))
+      onSuccess && onSuccess
+    } catch (err) {
+      isError && isError;
+    }
+  }
+);
+
 export const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -48,8 +69,21 @@ export const orderSlice = createSlice({
     setOrder: (state, action: PayloadAction<Order[]>) => {
       state.items = [...state.items, ...action.payload];
     },
+    updateOrderItem:(state,action:PayloadAction<UpdateOrder>)=>{
+      const payloadItemId = String(action.payload.itemId)
+      const otherOrders = state.items.filter(item=> item.itemId !== payloadItemId)
+      state.items = state.items.map(item=>{
+        const exit = state.items.find(item=> item.itemId === payloadItemId)
+        if(exit){
+           return {...exit,status:action.payload.status}
+        }else{
+            return item;
+        }
+      })
+    }
   },
 });
 
-export const { setOrder } = orderSlice.actions;
+export const { setOrder,updateOrderItem } = orderSlice.actions;
 export default orderSlice.reducer;
+4;
