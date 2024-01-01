@@ -1,19 +1,21 @@
 import ItemCard from "@/components/ItemCard/ItemCard";
 import NewLocation from "@/components/Location/NewLocaton";
-import { useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { Box, Button, Typography } from "@mui/material"
 import { useState } from "react";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { setSelectedLocation } from "@/store/slice/locationSlice";
 
 const Locations = ()=>{
     const [open,setOpen]= useState(false);
-    const locations = useAppSelector(state=>state.location.items)
+    const {items,selectedLocation} = useAppSelector(state=>state.location)
+    const dispatch = useAppDispatch();
     return(
         <Box sx={{display:"flex",maxWidth:"75vw" ,flexDirection:"column"}}>
             <Box sx={{display:"flex",justifyContent:"flex-end"}}>
                 <Button variant="contained" onClick={()=>setOpen(true)}>Create Location </Button>
             </Box>
-            <Box sx={{display:"flex",flexWrap:"wrap"}}>{locations.map(item=><ItemCard key={item.id} name={item.name} icon={<LocationOnIcon/>}/>)}</Box>
+            <Box sx={{display:"flex",flexWrap:"wrap"}}>{items.map(item=><ItemCard key={item.id} name={item.township} selected={item.id === selectedLocation?.id} onClick={()=>dispatch(setSelectedLocation(item))} icon={<LocationOnIcon/>}/>)}</Box>
             <NewLocation open={open} setOpen={setOpen}/>
         </Box>
     )

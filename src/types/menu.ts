@@ -1,4 +1,5 @@
 import { Menu } from "@prisma/client";
+import { BasicOptions } from "./app";
 
 export interface Menus {
     items:Menu[],
@@ -6,10 +7,6 @@ export interface Menus {
     error:null | Error
 } 
 
-export interface BasicOptions{
-    onSuccess?:(data?:any)=>void
-    isError?:(data?:any)=>void
-}
 export interface CreateMenuOptions extends BasicOptions{
     name:string
     price:number,

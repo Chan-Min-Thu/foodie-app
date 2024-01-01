@@ -1,5 +1,5 @@
 import { AddOnCategoryMenu } from "@prisma/client";
-import { BasicOptions } from "./menu";
+import { BasicOptions } from "./app";
 
 export  interface addonCategoryMenu{
     items:AddOnCategoryMenu[],

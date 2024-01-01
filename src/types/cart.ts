@@ -1,5 +1,5 @@
 import { AddOn, Menu } from "@prisma/client";
-import { BasicOptions } from "./menu";
+import { BasicOptions } from "./app";
 
 export interface CartItems{
     menu:Menu,

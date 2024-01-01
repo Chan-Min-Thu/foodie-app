@@ -1,4 +1,5 @@
 import { AddOnCategory } from "@prisma/client";
+import { BasicOptions } from "./app";
 
 export interface AddOnCategories {
     items:AddOnCategory[],
@@ -6,10 +7,6 @@ export interface AddOnCategories {
     error:null | Error
 } 
 
-export interface BasicOptions{
-    onSuccess?:(data?:any)=>void
-    isError?:(data?:any)=>void
-}
 export interface CreateAddonCategory extends BasicOptions{
     name:string,
     menuId:number[],

@@ -2,7 +2,7 @@ import MenuCard from "@/components/ItemCard/MenuCard";
 import OrderAppHeader from "@/components/OrderAppHeader";
 import { useAppSelector } from "@/store/hook";
 import { RedoTwoTone } from "@mui/icons-material";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

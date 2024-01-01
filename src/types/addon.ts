@@ -1,4 +1,5 @@
 import { AddOn } from "@prisma/client";
+import { BasicOptions } from "./app";
 
 export interface AddOns {
     items:AddOn[],
@@ -20,7 +21,4 @@ export interface UpdateAddonOption extends BasicOptions{
 export interface DeleteAddonOption extends BasicOptions{
     id:number
 }
-export interface BasicOptions{
-    onSuccess?:(data?:any)=>void
-    isError?:(data?:any)=>void
-}
+

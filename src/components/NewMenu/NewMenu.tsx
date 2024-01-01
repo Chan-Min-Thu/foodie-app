@@ -100,7 +100,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
       );
      
     }
-    dispatch(
+    !menuImage && dispatch(
       createMenu({
         ...newMenu,
         onSuccess: () => {

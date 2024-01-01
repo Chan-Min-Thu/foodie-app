@@ -8,7 +8,7 @@ import SegmentIcon from "@mui/icons-material/Segment";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { selectedLocation } from "@/store/slice/locationSlice";
+import { setSelectedLocation } from "@/store/slice/locationSlice";
 
 interface Props {
   open: boolean;
@@ -25,16 +25,16 @@ const TopBar = ({ open, setOpen }: Props) => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(()=>{
-     const selectedLocationId = Number(localStorage.getItem("selectedlocationId"))
-     if(selectedLocationId){
-     const location = locations.find(item=>item.id === selectedLocationId);
-    location && dispatch(selectedLocation(location))
-     }else{
-      const location = locations[0];
-      dispatch(selectedLocation(location))
-     }
-  },[locations,location])
+  // useEffect(()=>{
+  //    const selectedLocationId = Number(localStorage.getItem("selectedlocationId"))
+  //    if(selectedLocationId){
+  //    const location = locations.find(item=>item.id === selectedLocationId);
+  //   location && dispatch(setSelectedLocation(location))
+  //    }else{
+  //     const location = locations[0];
+  //     dispatch(setSelectedLocation(location))
+  //    }
+  // },[locations,location])
   return (
     <Box
       sx={{
@@ -80,7 +80,7 @@ const TopBar = ({ open, setOpen }: Props) => {
         <Typography variant="h5" color={"secondary.main"}>
           Foodie App
         </Typography>
-        <Typography color={"secondary.main"}>({location?.name})</Typography>
+        <Typography color={"secondary.main"}>({location?.township})</Typography>
       </Box>
       {session ? (
         <Button

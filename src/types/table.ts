@@ -1,16 +1,11 @@
 import { Table } from "@prisma/client";
+import { BasicOptions } from "./app";
 
 export interface Tables {
     items:Table[],
     isLoading:boolean,
     error:null | Error
 } 
-
-export interface BasicOptions{
-    onSuccess?:(data?:any)=>void
-    isError?:(data?:any)=>void
-}
-
 
 export interface CreateTableOptions extends BasicOptions{
     name:string | undefined;

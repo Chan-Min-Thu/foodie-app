@@ -22,6 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const companyId = location?.companyId
     // const locationIds = locations.map((item) => item.id);
 
+    const company = await prisma.company.findFirst({where:{id:companyId}})
+
     //find MenuCategories
     let menuCategories = await prisma.menuCategory.findMany({
       where: { companyId,isArchived:false },
@@ -71,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const tableIds = (await prisma.table.findMany({where:{locationId:locationId}})).map((item)=>item.id) 
 
     //find orders 
-    const orders = await prisma.order.findMany({where:{tableId:{in:tableIds}}})
+    const orders = await prisma.order.findMany({where:{tableId:tableId}})
   
     return res.status(200).json({
       menuCategories,
@@ -82,6 +84,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       tables:[],
       orders,
       locations:[],
+      company,
       menuCategoryMenus,
       disabledMenuCategoryLocation:[],
       disabledMenuLocation:[]
@@ -96,9 +99,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!dbUser) {
     //1. create new company and assign to newUser
     const newCompanyName = "Shwe Mandalay";
-    const newCompanyAddress = "62 street,132 and 133 bet, Pyi Gyi Tagon Township";
+    const newCompanyStreet = "62 street,132 and 133 bet";
+    const newCompanyTownship = "Pyi Gyi Tagon";
+    const newCompanyCity = "Mandalay"
     const company = await prisma.company.create({
-      data: { name: newCompanyName, address: newCompanyAddress },
+      data: { name: newCompanyName, street: newCompanyStreet,township:newCompanyTownship,city:newCompanyCity },
     });
     //2.create new User
     await prisma.user.create({ data: { name, email, companyId: company.id } });
@@ -150,10 +155,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
     //9.create one row in location
 
-    const locationName = "Chan Mya Tar Zi";
-    const address = "72 street, 101 and 102 bet,Chan Mya Thar ZiTownship ";
+    const locationStreet = "62 street,132 and 133 bet";
+    const locationTownship = "Pyi Gyi Tagon";
+    const locationCity = "Mandalay";
     const location = await prisma.location.create({
-      data: { name: locationName, address, companyId: company.id },
+      data: {street:locationStreet,township:locationTownship,city:locationCity, companyId: company.id },
     });
 
     //10. create one row in tables
@@ -178,11 +184,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else {
     // get company id
     const companyId = dbUser.companyId;
-
+    // find company
+    const company = await prisma.company.findFirst({where:{id:companyId}})
     // find locationIds
     const locations = await prisma.location.findMany({ where: { companyId,isArchived:false } });
     const locationIds = locations.map((item) => item.id);
-
+    
     //find MenuCategories
     const menuCategories = await prisma.menuCategory.findMany({
       where: { companyId,isArchived:false },
@@ -228,9 +235,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { locationId: { in: locationIds },isArchived:false },
     });
     const tableIds = tables.map(item=> item.id);
-
+  
     const orders = await prisma.order.findMany({where:{tableId:{in:tableIds}}})
     return res.status(200).json({
+      company,
       menuCategories,
       menus,
       addOnCategories,

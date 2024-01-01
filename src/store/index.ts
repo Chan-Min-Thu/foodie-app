@@ -13,6 +13,7 @@ import disabledMenuCategoryLocationReducer from "./slice/disabledMenuCategoryLoc
 import disabledMenuLocationReducer from "./slice/disabledMenuLocation"
 import cartsReducer from "./slice/cartSlice"
 import orderReducer from "./slice/orderSlice"
+import companyReducer from "./slice/companySlice"
 
 export const store = configureStore({
   reducer: {
@@ -29,7 +30,8 @@ export const store = configureStore({
     disabledMenuCategoryLocation:disabledMenuCategoryLocationReducer,
     disabledMenuLocation:disabledMenuLocationReducer,
     carts:cartsReducer,
-    order:orderReducer
+    order:orderReducer,
+    company:companyReducer
   },
 });
 

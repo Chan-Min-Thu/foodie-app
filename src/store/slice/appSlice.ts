@@ -13,6 +13,7 @@ import { setAddonCategoryMenu } from "./addonCategoryMenuSlice";
 import { setDisabledMenuCategoryLocation } from "./disabledMenuCategoryLocation";
 import { setDisabledMenuLocation } from "./disabledMenuLocation";
 import { setOrder } from "./orderSlice";
+import { setCompany } from "./companySlice";
 
 const initialState: AppSlice = {
   init: false,
@@ -24,7 +25,7 @@ export const fetchAppData = createAsyncThunk(
   async (payload: AppOption, thunkApi) => {
     const {tableId,onSuccess, isError } = payload;
     try {
-      const response = tableId ? await fetch(`${config.apiBaseUrl}/app?tableId=${tableId}`):await fetch(`${config.apiBaseUrl}/app`);
+      const response = tableId ? await fetch(`${config.apiBaseUrl}/app?tableId=${tableId}`) : await fetch(`${config.apiBaseUrl}/app`);
       const datafromServer = await response.json();
       const {
         menuCategories,
@@ -34,6 +35,7 @@ export const fetchAppData = createAsyncThunk(
         tables,
         orders,
         locations,
+        company,
         menuCategoryMenus,
         addOnCategoryMenus,
         disabledMenuCategoryLocation,
@@ -49,6 +51,7 @@ export const fetchAppData = createAsyncThunk(
       thunkApi.dispatch(setTable(tables));
       thunkApi.dispatch(setOrder(orders));
       thunkApi.dispatch(setLocation(locations));
+      thunkApi.dispatch(setCompany(company))
       thunkApi.dispatch(
         setDisabledMenuCategoryLocation(disabledMenuCategoryLocation)
       );

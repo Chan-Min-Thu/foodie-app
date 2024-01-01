@@ -17,10 +17,10 @@ export default async function handler(
     const dbUser = await prisma.user.findUnique({where:{email}})
     if(!dbUser) return res.status(401).send("Unauthorized.");
     const companyId = dbUser.companyId;
-    const {name,address} = req.body;
-    const isValid = name && address;
+    const {street,township,city} = req.body;
+    const isValid = street && township && city;
     if(!isValid) return res.status(400).send("Bad request...")
-    const location = await prisma.location.create({data:{name,address,companyId}})
+    const location = await prisma.location.create({data:{street,township,city,companyId}})
     res.status(200).send(location)
     }
   res.status(404).send("Method is not allowed...")

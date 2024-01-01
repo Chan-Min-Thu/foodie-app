@@ -24,6 +24,7 @@ export const createMenu = createAsyncThunk(
         body: JSON.stringify({ name, price, menuCategoryId ,imgUrl}),
       });
       const data = await response.json();
+      console.log(data)
       thunkApi.dispatch(addMenu(data.menu));
       thunkApi.dispatch(setMenuCategoryMenu(data.menuCategoryMenu))
       onSuccess && onSuccess();
@@ -82,8 +83,8 @@ export const menuSlice = createSlice({
     setMenu: (state, action) => {
       state.items = action.payload;
     },
-    addMenu: (state, action) => {
-      state.items = [...state.items, action.payload];
+    addMenu :(state, action) => {
+      state.items = [...state.items,action.payload];
     },
     replaceMenu: (state, action) => {
       const otherMenus = state.items.filter(
@@ -100,5 +101,5 @@ export const menuSlice = createSlice({
   },
 });
 
-export const { setMenu, addMenu, replaceMenu,removeMenu,setIsLoading } = menuSlice.actions;
+export const { setMenu,addMenu, replaceMenu,removeMenu,setIsLoading } = menuSlice.actions;
 export default menuSlice.reducer;

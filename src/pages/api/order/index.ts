@@ -31,7 +31,6 @@ export default async function handler(
                 totalPrice:generalTotalPrice(cartItems),
                 quantity:cartItem.quantity
                }})
-            // console.log(addon)
         }
     }else{
        await prisma.order.create({data:{
@@ -47,7 +46,12 @@ export default async function handler(
    }
    const orders = await prisma.order.findMany({where:{orderSeq}})
    return res.status(200).json({orders})
-  }else{
+  }else if(method === "GET"){
+    const orderSeq = req.query.orderSeq;
+    if(!orderSeq) return res.status(400).send("Bad request.");
+    const orders = await prisma.order.findMany({where:{orderSeq:String(orderSeq)}})
+    return res.status(200).json({orders})
+  }else if(method === "PUT"){
     const {itemId} = req.query;
     const {status} =req.body;
     const isValid = itemId && status;
@@ -55,6 +59,7 @@ export default async function handler(
     const isOrderItem = await prisma.order.findFirst({where:{itemId:String(itemId)}})
     if(!isOrderItem) return res.status(400).send("Bad request.");
     const orders = await prisma.order.updateMany({where:{itemId:String(itemId)},data:{status}})
+    return res.status(200).json({orders})
   }
  return res.status(404).send("Method is not allowed")
 }

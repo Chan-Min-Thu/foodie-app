@@ -12,20 +12,23 @@ datasource db {
 
 model Company {
   id           Int            @id @default(autoincrement())
-  name         String?
-  address      String?
+  name         String
+  street       String
+  township     String
+  city         String
   loactions    Location[]
   menuCategory MenuCategory[]
   users        User[]
   isArchived   Boolean        @default(false)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model Location {
   id                           Int                            @id @default(autoincrement())
-  name                         String
-  address                      String
+  street                       String
+  township                     String
+  city                         String
   companyId                    Int
   company                      Company                        @relation(fields: [companyId], references: [id])
   disabledMenuCategoryLocation DisabledMenuCategoryLocation[]
@@ -60,29 +63,29 @@ model DisabledMenuCategoryLocation {
 }
 
 model Menu {
-  id                  Int                   @id @default(autoincrement())
+  id                  Int                    @id @default(autoincrement())
   name                String
   price               Int
   imgUrl              String?
   menuCategoryMenu    MenuCategoryMenu[]
   disabledMenuLoction DisabledMenuLocation[]
   addOnCategoryMenu   AddOnCategoryMenu[]
-  Order              Order[]
-  isArchived          Boolean               @default(false)
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
+  Order               Order[]
+  isArchived          Boolean                @default(false)
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
 }
 
 model MenuCategoryMenu {
-  id             Int          @id @default(autoincrement())
+  id             Int  @id @default(autoincrement())
   menuId         Int
-  menu           Menu         @relation(fields: [menuId], references: [id])
+  menu           Menu @relation(fields: [menuId], references: [id])
   menuCategoryId Int
- 
-  menuCategory   MenuCategory @relation(fields: [menuCategoryId], references: [id])
-  isArchived     Boolean      @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+
+  menuCategory MenuCategory @relation(fields: [menuCategoryId], references: [id])
+  isArchived   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model DisabledMenuLocation {
@@ -135,9 +138,9 @@ model Order {
   status     ORDERSTATUS
   totalPrice Int
   menuId     Int
-  menu       Menu     @relation(fields: [menuId], references: [id])
+  menu       Menu        @relation(fields: [menuId], references: [id])
   addOnId    Int?
-  addOn      AddOn?    @relation(fields: [addOnId], references: [id])
+  addOn      AddOn?      @relation(fields: [addOnId], references: [id])
   quantity   Int
   orderSeq   String
   itemId     String?

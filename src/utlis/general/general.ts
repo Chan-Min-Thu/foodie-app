@@ -1,6 +1,6 @@
 import { CartItems } from "@/types/cart"
 import { OrderAddon, OrderItem } from "@/types/order"
-import { AddOn, Order } from "@prisma/client"
+import { AddOn, Menu, Order, Table } from "@prisma/client"
 import { it } from "node:test"
 
 export const genereteRandomIds = ()=>{
@@ -17,10 +17,10 @@ export const generalTotalPrice =(carts:CartItems[])=>{
     ,0)
 }
 
-export const formatOrders = (orders:Order[],addons:AddOn[])=>{
+export const formatOrders = (orders:Order[],addons:AddOn[],menus:Menu[],tables:Table[])=>{
     const orderItemIds:string[]= [];
     orders.forEach(order=>{
-        const itemId = order.itemId;
+        const itemId = order.itemId as string;
         const exit = orderItemIds.find(orderItemId => orderItemId === order.itemId);
         if(!exit) orderItemIds.push(itemId);
     })
@@ -33,19 +33,21 @@ export const formatOrders = (orders:Order[],addons:AddOn[])=>{
             const exit = orderAddons.find(item=> item.addonCategoryId === addon?.addOnCategoryId);
             if(exit){
               orderAddons = orderAddons.map(item=> {
-                const isSameParent = item.addonCategoryId === addon.addOnCategoryId
+                const isSameParent = item.addonCategoryId === addon?.addOnCategoryId
                if(isSameParent){
-                return {addonCategoryId:item.addonCategoryId,addons:[...item.addons,addon]}   
+                return {addonCategoryId:item.addonCategoryId,addons:[...item.addons,addon].sort((a,b)=>a.name.localeCompare(b.name))}   
                }else{
                 return item
                }
                })
             }else{
-                orderAddons.push({addonCategoryId:addon?.addOnCategoryId,addons:[addon]})
+                orderAddons.push({addonCategoryId:addon?.addOnCategoryId,addons:[addon].sort((a,b)=>a.name.localeCompare(b.name))})
             }
         })
-        console.log({itemId:orderItemId,status:currentOrders[0].status,orderAddons})
-        return {itemId:orderItemId,status:currentOrders[0].status,orderAddons}
+        console.log(currentOrders)
+        const menu= menus.find(menu=> menu.id === currentOrders[0].menuId) as Menu
+        const table = tables.find(table=> table.id === currentOrders[0].tableId) as Table
+        return {itemId:orderItemId,status:currentOrders[0].status,orderAddons,menu,table}
     })
-   return orderItems
+   return orderItems.sort((a,b)=> a.itemId.localeCompare(b.itemId))
 } 

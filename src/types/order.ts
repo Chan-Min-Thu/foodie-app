@@ -1,6 +1,6 @@
-import { AddOn, ORDERSTATUS, Order } from "@prisma/client";
+import { AddOn, Menu, ORDERSTATUS, Order, Table } from "@prisma/client";
 import { CartItems } from "./cart";
-import { BasicOptions } from "./menu";
+import { BasicOptions } from "./app";
 
 export interface CreateOrder extends BasicOptions{
     tableId:number,
@@ -19,9 +19,14 @@ export interface OrderAddon{
     addonCategoryId:number,
     addons:AddOn[]
 }
+export interface RefreshOrder extends BasicOptions{
+    orderSeq:string,
+}
 
 export interface OrderItem{
     itemId:string,
+    menu:Menu,
+    table:Table,
     orderAddons:OrderAddon[],
     status:ORDERSTATUS
 }

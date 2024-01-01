@@ -1,8 +1,6 @@
 import { useAppSelector } from "@/store/hook";
-import { OrderAddon, OrderItem } from "@/types/order";
-import { Height } from "@mui/icons-material";
-import { Box, Card, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
-import { lightGreen } from "@mui/material/colors";
+import { OrderItem } from "@/types/order";
+import { Box, Card, MenuItem, Select, Typography } from "@mui/material";
 import { AddOnCategory, ORDERSTATUS } from "@prisma/client";
 
 interface Props {
@@ -13,41 +11,46 @@ interface Props {
 
 const OrderCard = ({ orderItem,isAdmin,handleUpdateStatus }: Props) => {
   const addonCategories = useAppSelector((state) => state.addonCategory.items);
+  if(!addonCategories && !orderItem) return null;
+  
   return (
     <Box sx={{m:2}}>
       <Card
         sx={{
-          width: 250,
+          width: 300,
           height: 300,
           borderRadius: 1,
-          px: 1,
-          mx:2,
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <Box sx={{ height: 300 * 0.1, borderBottom: "1px solid lightgray",textAlign:"center",alignItems:"center",my:"auto" }}>
-          <Typography sx={{alignItems:"center"}}>ItemId : {orderItem.itemId}</Typography>
+        <Box sx={{bgcolor:"#4C4C6D",display:"flex",justifyContent:"space-between",p:1,color:"white"}}>
+          <Typography>{orderItem?.menu?.name}</Typography>
+          <Typography>{orderItem?.table?.name}</Typography>
+        </Box>
+        <Box sx={{ height: 300 * 0.1,p:1, borderBottom: "1px solid lightgray",display:"flex",justifyContent:"space-between",alignItems:"center",my:"auto" }}>
+        <Typography>ItemId : </Typography>  <Typography sx={{alignItems:"center"}}>{orderItem.itemId}</Typography>
         </Box>
         <Box
           sx={{
-            height: 300 * 0.55,
+            height: 300 * 0.6,
+            py:1,
             overflow: "scroll",
-            scrollbarWidth:"none",
             borderBottom: "1px solid lightgray",
           }}
         >
           {orderItem.orderAddons.map((addon, index) => {
             const addonCategory = addonCategories.find(
-              (item) => item.id === addon.addonCategoryId
+              (item) => item?.id === addon?.addonCategoryId
             ) as AddOnCategory;
+
             return (
               <Box key={index}>
-                <Typography>{addonCategory.name}</Typography>
+                <Typography>{addonCategory?.name}</Typography>
                 {addon.addons.map((item) => {
                   return (
                     <Box
-                      key={item.id}
+                      key={item?.id}
                       sx={{
                         width:200,
                         display: "flex",
@@ -64,10 +67,10 @@ const OrderCard = ({ orderItem,isAdmin,handleUpdateStatus }: Props) => {
                           fontStyle: "italic",
                         }}
                       >
-                        {item.name}
+                        {item?.name}
                       </Typography>
                       <Typography>
-                        {item.price === 0 ? "" : item.price}
+                        {item?.price === 0 ? "" : item?.price}
                       </Typography>
                     </Box>
                   );
@@ -76,15 +79,15 @@ const OrderCard = ({ orderItem,isAdmin,handleUpdateStatus }: Props) => {
             );
           })}
         </Box>
-        <Box sx={{ height: 300 * 0.22 }}>
+        <Box sx={{width:300,px:1, height: 300 * 0.22 ,display:"flex",justifyItems:"space-between",alignItems:"center"}}><Typography> Order Status :</Typography>
           {isAdmin ? (
-            <Select value={orderItem.status} sx={{my:1}} onChange={(evt: SelectChangeEvent<"PENDING" | "COOKING" | "COMPLETED">)=>handleUpdateStatus(orderItem.itemId,evt.target.value)}>
-              <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.PENDING}>{ORDERSTATUS.PENDING}</MenuItem>handleUpdateStatus
+            <Select value={orderItem.status} sx={{width:"fit-content"}} onChange={(evt)=>handleUpdateStatus && handleUpdateStatus(orderItem.itemId,evt.target.value as ORDERSTATUS)}>
+              <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.PENDING}>{ORDERSTATUS.PENDING}</MenuItem>
               <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.COOKING}>{ORDERSTATUS.COOKING}</MenuItem>
               <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.COMPLETED}>{ORDERSTATUS.COMPLETED}</MenuItem>
             </Select>
           ) : (
-            <Typography>Ordet Status : {orderItem.status}</Typography>
+            <Typography>{orderItem?.status}</Typography>
           )}
         </Box>
       </Card>

@@ -8,18 +8,20 @@ import { useEffect } from "react";
 import { fetchAppData } from "@/store/slice/appSlice";
 import React from "react";
 import HomeIcon from '@mui/icons-material/Home';
+import { Company } from "@prisma/client";
 
 interface Props {
   countCartItems: number;
+  company:Company,
 }
-const OrderAppHeader = ({ countCartItems }: Props) => {
+const OrderAppHeader = ({ countCartItems ,company}: Props) => {
   const router = useRouter();
   const tableId = router.query.tableId
   const isHome = router.pathname === `/order`;
   const isCart = router.pathname === "/order/carts";
   const isActiveOrder = router.pathname === "/order/activeOrder";
-  const showCartIcon = !isCart && !isActiveOrder;
-
+  const showCartIcon = !isCart && !isActiveOrder && isHome;
+  if(!company) return null;
   return (
     <Box
       sx={{
@@ -97,12 +99,12 @@ const OrderAppHeader = ({ countCartItems }: Props) => {
               color: "primary.main",
             }}
           >
-            Ahh Wah Sarr
+           {company.name}
           </Typography>
           <Typography sx={{ color: "primary.main" }}>
-            56 street,105 and 106 bet,
+            {company.street}
             <br />
-            Chan Mya Tharzi Township
+           {company.township},{company.city}
           </Typography>
         </Box>
       )}
