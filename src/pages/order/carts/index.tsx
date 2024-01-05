@@ -161,7 +161,7 @@ const Carts = () => {
         </Box>
       ) : (
         <Box sx={{ my: 5 }}>
-          <Typography>There isn't any selected Carts.</Typography>
+          <Typography>There is not any selected Carts.</Typography>
         </Box>
       )}
     </Box>

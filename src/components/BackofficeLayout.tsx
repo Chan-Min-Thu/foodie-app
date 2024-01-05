@@ -20,9 +20,6 @@ const BackofficeLayout = ({ children }: Props) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    setOpen(open);
-  }, []);
 
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((state) => state.app);
