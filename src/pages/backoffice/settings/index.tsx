@@ -8,14 +8,12 @@ import {
   Button,
 
   SelectChangeEvent,
-  TextField,
-  useMediaQuery,
+  TextField
 } from "@mui/material"
 import { useEffect, useState } from "react";
 
 const Setting = () => {
   const company = useAppSelector((state) => state.company.item);
-  const matches = useMediaQuery(theme.breakpoints.between("xs", "md"));
 
   const dispatch = useAppDispatch();
 
@@ -53,12 +51,11 @@ const Setting = () => {
 
 
   return (
-    <Box sx={{ width: matches ? "100%" : "80vw" }}>
-     
+    <Box sx={{ width:"100%"}}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2, mx: 1 }}
+          sx={{ minWidth: {xs:300,sm:400}, mt: 2, mx: 1 }}
           label="Name"
           defaultValue={company?.name}
           onChange={(evt) =>
@@ -67,7 +64,7 @@ const Setting = () => {
         />
         <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2, mx: 1 }}
+          sx={{ minWidth: {xs:300,sm:400}, mt: 2, mx: 1 }}
           label="Street"
           defaultValue={company?.street}
           onChange={(evt) =>
@@ -76,7 +73,7 @@ const Setting = () => {
         />
          <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2, mx: 1 }}
+          sx={{ minWidth: {xs:300,sm:400}, mt: 2, mx: 1 }}
           label="Township"
           defaultValue={company?.township}
           onChange={(evt) =>
@@ -85,7 +82,7 @@ const Setting = () => {
         />
          <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2, mx: 1 }}
+          sx={{ minWidth: {xs:300,sm:400}, mt: 2, mx: 1 }}
           label="City"
           defaultValue={company?.city}
           onChange={(evt) =>
@@ -93,7 +90,7 @@ const Setting = () => {
           }
         />
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end", my: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", m: 2 }}>
           <Button
             variant="contained"
             sx={{ mr: 2 }}

@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Typography} from "@mui/material";
 import { ReactNode, useEffect, useState } from "react";
 import TopBar from "./TopBar";
 import SideBar from "./SideBar";
@@ -9,7 +9,6 @@ import { theme } from "@/utils/theme";
 import GoogleIcon from "@mui/icons-material/Google"
 import Home from "@/pages";
 import { useRouter } from "next/router";
-// import { init } from "next/dist/compiled/webpack/webpack";
 
 interface Props {
   children: ReactNode;
@@ -18,7 +17,7 @@ const Layout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter()
   const [open, setOpen] = useState(false);
-  const matches = useMediaQuery(theme.breakpoints.between("xs", "sm"));
+ 
   useEffect(() => {
     setOpen(open);
   }, []);
@@ -37,8 +36,7 @@ const Layout = ({ children }: Props) => {
          {session && <SideBar open={open} setOpen={setOpen} />}
           <Box
             sx={{
-              "&:mathces": { minWidth: "20vw" },
-              "!&:mathces": { minWidth: "100vw * 0.8 "},
+              minWidth:{sm:"100vw * 0.8 "},
               mx: 2,
               my: 2,
             }}

@@ -1,12 +1,37 @@
-import { Box, Button, Typography } from "@mui/material";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import GoogleIcon from "@mui/icons-material/Google";
-import { autoBatchEnhancer } from "@reduxjs/toolkit";
+import Features from "@/components/Features";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import Testimonials from "@/components/Testimonials";
+import { Box } from "@mui/material";
 
-export default function Home() {
-  return(
-  <Box>
-    <h1>This is home page.</h1>
-  </Box>)
-}
+const FoodiePOS = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        minHeight: "100vh",
+        overflowY: "auto",
+        flexDirection: "column",
+      }}
+    >
+      <Header />
+      <Box
+        sx={{
+          maxWidth: { md: "100%", lg: "1280px" },
+          m: "0 auto",
+          px: { xs: "10px", md: "15px" },
+        }}
+      >
+        <Hero />
+        <Features />
+        <Testimonials />
+      </Box>
+      <Footer />
+    </Box>
+  );
+};
+
+export default FoodiePOS;

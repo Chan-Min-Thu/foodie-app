@@ -80,8 +80,8 @@ const OrderCard = ({ orderItem,isAdmin,handleUpdateStatus }: Props) => {
           })}
         </Box>
         <Box sx={{width:300,px:1, height: 300 * 0.22 ,display:"flex",justifyItems:"space-between",alignItems:"center"}}><Typography> Order Status :</Typography>
-          {isAdmin ? (
-            <Select value={orderItem.status} sx={{width:"fit-content"}} onChange={(evt)=>handleUpdateStatus && handleUpdateStatus(orderItem.itemId,evt.target.value as ORDERSTATUS)}>
+          {isAdmin  && handleUpdateStatus? (
+            <Select value={orderItem.status} sx={{width:"fit-content"}} onChange={(evt,value)=> handleUpdateStatus(orderItem.itemId,evt.target.value as ORDERSTATUS)}>
               <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.PENDING}>{ORDERSTATUS.PENDING}</MenuItem>
               <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.COOKING}>{ORDERSTATUS.COOKING}</MenuItem>
               <MenuItem sx={{width:"fit-content",}} value={ORDERSTATUS.COMPLETED}>{ORDERSTATUS.COMPLETED}</MenuItem>

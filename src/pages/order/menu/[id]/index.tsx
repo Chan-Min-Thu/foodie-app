@@ -86,6 +86,8 @@ const MenuDetails = () => {
   return (
     <Box
       sx={{
+        position:"relative",
+        zIndex:{xs:2,sm:5},
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",

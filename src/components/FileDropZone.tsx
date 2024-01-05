@@ -14,10 +14,10 @@ const NewDropZone = ({onFileSelected}:Props)=>{
         <Box
           {...getRootProps()}
           sx={{
-            borderRadius: 4,
+            width:{xs:245,sm:345},
+            borderRadius: 3,
             border: "3px dotted lightgray",
             textAlign: "center",
-            p: 1,
             cursor: "pointer",
           }}
         >
@@ -25,7 +25,7 @@ const NewDropZone = ({onFileSelected}:Props)=>{
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
-            <p>Drag drop some files here, or click to select files</p>
+            <p>Drag drop some files here, or select files</p>
           )}
         </Box>
         

@@ -58,7 +58,13 @@ export default async function handler(
     if(!isValid) return res.status(400).send("Bad request.");
     const isOrderItem = await prisma.order.findFirst({where:{itemId:String(itemId)}})
     if(!isOrderItem) return res.status(400).send("Bad request.");
-    const orders = await prisma.order.updateMany({where:{itemId:String(itemId)},data:{status}})
+    await prisma.order.updateMany({data:{status:status as ORDERSTATUS},where:{itemId:String(itemId)}})
+    const table = await prisma.table.findFirst({where:{id:isOrderItem.tableId}});
+    const location = await prisma.location.findFirst({where:{id:table?.locationId}});
+    const tableIds = (await prisma.table.findMany({where:{locationId:location?.id}})).map(item=>item.id);
+    console.log(tableIds)
+    const orders = await prisma.order.findMany({where:{tableId:{in:tableIds}},orderBy:{id:"asc"}})
+    console.log(orders)
     return res.status(200).json({orders})
   }
  return res.status(404).send("Method is not allowed")

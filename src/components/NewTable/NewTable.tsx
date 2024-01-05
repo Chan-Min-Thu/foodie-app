@@ -64,13 +64,13 @@ const NewTable = ({ open, setOpen }: Props) => {
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Create Table </DialogTitle>
-      <DialogContent sx={{ width: 400 }}>
+      <DialogContent sx={{width:{xs:250,sm:400} }}>
         <TextField
           id="outlined-basic"
           label="Name"
           value={newTable.name}
           variant="outlined"
-          sx={{ width: 400, mt: 2 }}
+          sx={{width:{xs:250,sm:400} , mt: 2 }}
           onChange={(evt) =>
             setNewTable({ ...newTable, name: evt.target.value as string })
           }

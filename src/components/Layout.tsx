@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Typography, Query } from "@mui/material";
 import { ReactNode, useEffect, useState } from "react";
 import TopBar from "./TopBar";
 import SideBar from "./SideBar";

@@ -38,6 +38,8 @@ const ActiveOrder = () => {
   return (
     <Box
       sx={{
+        width:"80vw",
+        mx:"auto",
         display: "flex",
         justifyContent: "center",
         flexDirection: "column",
@@ -45,13 +47,12 @@ const ActiveOrder = () => {
       }}
     >
       <Box sx={{display:"flex",flexDirection:"column",justifyContent:"center", bgcolor: "lightgreen", px: 3, py: 2, borderRadius: 10}}>
-        <Typography variant="h6" sx={{ mb: 3 ,alignItems:"center",m:"auto"}}>
+        <Typography sx={{ mb: 3 ,fontSize:"16px",alignItems:"center",m:"auto"}}>
           OrderSeq : {orderSeq}
           
         </Typography>
         <Typography sx={{ mb: 3 ,alignItems:"center",m:"auto"}}>
           Total Price: {orders[0]?.totalPrice}
-          
         </Typography>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "row", flexWrap:"wrap" }}>

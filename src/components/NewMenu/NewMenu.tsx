@@ -91,7 +91,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
                 message: "New Menu created succcessfully.",
                 severity: "success",
                 open: true,
-                autoHideDuration: 3000,
+                autoHideDuration: 2500,
               })
             );
             
@@ -110,7 +110,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
               message: "New Menu created succcessfully.",
               severity: "success",
               open: true,
-              autoHideDuration: 3000,
+              autoHideDuration: 2500,
             })
           );
         },
@@ -131,7 +131,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
           label="Name"
           defaultValue={newMenu.name}
           variant="outlined"
-          sx={{ width: 400, mt: 2 }}
+          sx={{ width:{xs:250,sm:350}, mt: 2 }}
           onChange={(evt) => setNewMenu({ ...newMenu, name: evt.target.value })}
         />
         <TextField
@@ -139,13 +139,13 @@ const NewMenu = ({ open, setOpen }: Props) => {
           label="Price"
           variant="outlined"
           defaultValue={newMenu.price}
-          sx={{ width: 400, mt: 2 }}
+          sx={{ width:{xs:250,sm:350}, mt: 2 }}
           onChange={(evt) =>
             setNewMenu({ ...newMenu, price: Number(evt.target.value) })
           }
         />
 
-        <FormControl sx={{ width: 400, mt: 2 }}>
+        <FormControl sx={{ width:{xs:250,sm:350}, mt: 2 }}>
           <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"
@@ -170,7 +170,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
               PaperProps: {
                 style: {
                   maxHeight: 48 * 4.5 + 8,
-                  width: 250,
+                  width: 240,
                 },
               },
             }}
@@ -183,20 +183,20 @@ const NewMenu = ({ open, setOpen }: Props) => {
             ))}
           </Select>
         </FormControl>
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt:2,width:{xs:"250",sm:"350"} }}>
           <FileDropZone onFileSelected={onFileSelected} />
           {menuImage && (
             <Chip
-              sx={{ mt: 2 }}
+              sx={{ m: 1 }}
               label={menuImage.name}
               onDelete={() => setMenuImage(undefined)}
             />
           )}
         </Box>
-        <DialogContent sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <DialogContent sx={{ width:{xs:240,sm:335},display: "flex", justifyContent: {xs:"flex-start",sm:"flex-end"} }}>
           <Button
             variant="contained"
-            sx={{ mr: 2 }}
+            sx={{mr:1}}
             onClick={() => setOpen(false)}
           >
             Cancel

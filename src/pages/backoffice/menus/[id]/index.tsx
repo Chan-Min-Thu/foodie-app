@@ -168,7 +168,7 @@ const MenuDetails = () => {
         </Box>
         <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2 }}
+          sx={{ width:{xs:300,sm:400} , mt: 2 }}
           label="Name"
           defaultValue={menu.name}
           onChange={(evt) =>
@@ -179,7 +179,7 @@ const MenuDetails = () => {
         <TextField
           id="outlined-basic"
           label="Price"
-          sx={{ minWidth: 400, mt: 2 }}
+          sx={{width:{xs:300,sm:400} , mt: 2 }}
           defaultValue={menu.price}
           onChange={(evt) =>
             setData({
@@ -190,7 +190,7 @@ const MenuDetails = () => {
           }
           variant="outlined"
         />
-        <FormControl sx={{ width: 400, mt: 2 }}>
+        <FormControl sx={{width:{xs:300,sm:400} , mt: 2 }}>
           <InputLabel id="demo-multiple-checkbox-label" sx={{ minWidth: 400 }}>
             Tag
           </InputLabel>
@@ -218,7 +218,7 @@ const MenuDetails = () => {
               PaperProps: {
                 style: {
                   maxHeight: 48 * 4.5 + 8,
-                  width: 250,
+                  width: 300,
                 },
               },
             }}
@@ -242,7 +242,7 @@ const MenuDetails = () => {
           }
           label="Available"
         />
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Box sx={{ display: "flex",width:{xs:300,sm:400} , justifyContent: "flex-end", mt: 2 }}>
           <Button
             variant="contained"
             sx={{ mr: 2 }}

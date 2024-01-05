@@ -62,7 +62,7 @@ const NewAddonCategory = ({ open, setOpen }: Props) => {
       <DialogTitle>Create Addon Category </DialogTitle>
       <DialogContent sx={{display:"flex",flexDirection:"column"}}>
         <TextField
-          sx={{m:2}}
+          sx={{m:2,width:{xs:200,sm:300}}}
           id="outlined-basic"
           label="Addon Category"
           variant="outlined"
@@ -73,7 +73,7 @@ const NewAddonCategory = ({ open, setOpen }: Props) => {
             })
           }
         />
-        <FormControl sx={{m:2, width: 300 }}>
+        <FormControl sx={{m:2, width:{xs:200,sm:300} }}>
           <InputLabel id="demo-multiple-name-label">Name</InputLabel>
           <Select
             labelId="demo-multiple-name-label"

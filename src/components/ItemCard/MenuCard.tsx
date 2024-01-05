@@ -20,6 +20,7 @@ const MenuCard = ({ menu, href,isAvailable }: Props) => {
       style={{
         textDecoration: "none",
         marginRight: "15px",
+        marginTop:"5px",
         marginBottom: "20px",
       }}
     >

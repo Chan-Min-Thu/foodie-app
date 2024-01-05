@@ -1,14 +1,12 @@
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Drawer, SwipeableDrawer, Typography } from "@mui/material";
 import Image from "next/image";
 import logo from "../assets/logo.png";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { theme } from "@/utlis/theme";
-import { Span } from "next/dist/trace";
-import SegmentIcon from "@mui/icons-material/Segment";
-import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
+import MenuIcon from '@mui/icons-material/Menu';
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { setSelectedLocation } from "@/store/slice/locationSlice";
+import { useState } from "react";
+import SideBar from "./SideBar";
+
 
 interface Props {
   open: boolean;
@@ -16,28 +14,22 @@ interface Props {
 }
 const TopBar = ({ open, setOpen }: Props) => {
   const { data: session } = useSession();
-  // const [selectedLocation,setSelectedLocation] = useState<Location>()
-
-  const matches = useMediaQuery(theme.breakpoints.between("xs", "sm"));
-
-  const locations = useAppSelector((state)=> state.location.items);
+  const [openDrawer,setOpenDrawer] = useState(false);
+  const locations = useAppSelector((state) => state.location.items);
   const location = useAppSelector((state) => state.location.selectedLocation);
 
   const dispatch = useAppDispatch();
 
-  // useEffect(()=>{
-  //    const selectedLocationId = Number(localStorage.getItem("selectedlocationId"))
-  //    if(selectedLocationId){
-  //    const location = locations.find(item=>item.id === selectedLocationId);
-  //   location && dispatch(setSelectedLocation(location))
-  //    }else{
-  //     const location = locations[0];
-  //     dispatch(setSelectedLocation(location))
-  //    }
-  // },[locations,location])
+  function toggleDrawer(right: any, arg1: boolean): import("react").ReactEventHandler<{}> {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <Box
       sx={{
+        position:"sticky",
+        top:0,
+        zIndex:5,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -47,25 +39,6 @@ const TopBar = ({ open, setOpen }: Props) => {
       }}
     >
       <Box sx={{ width: 90, display: "flex", flexDirection: "row" }}>
-        {open ? (
-          <CloseIcon
-            onClick={() => setOpen(false)}
-            sx={{
-              display: matches ? "block" : "none",
-              color: "info.main",
-              mr: 2,
-            }}
-          />
-        ) : (
-          <SegmentIcon
-            onClick={() => setOpen(true)}
-            sx={{
-              display: matches ? "block" : "none",
-              color: "info.main",
-              mr: 2,
-            }}
-          />
-        )}
         <Box sx={{ width: 70 }}>
           <Image
             src={logo}
@@ -75,7 +48,12 @@ const TopBar = ({ open, setOpen }: Props) => {
         </Box>
       </Box>
       <Box
-        sx={{ display: !matches ? "flex" : "none", flexDirection: "column",alignItems:"center",justifyContent:"center"}}
+        sx={{
+          display: { xs: "none", sm: "flex" },
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         <Typography variant="h5" color={"secondary.main"}>
           Foodie App
@@ -83,16 +61,30 @@ const TopBar = ({ open, setOpen }: Props) => {
         <Typography color={"secondary.main"}>({location?.township})</Typography>
       </Box>
       {session ? (
-        <Button
-          variant="contained"
-          sx={{ color: "secondary.main", fontSize: 12 }}
-          onClick={() => signOut({ callbackUrl: "/backoffice" })}
-        >
-          Sign Out
-        </Button>
+        <Box>
+          <Button
+            variant="contained"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              color: "secondary.main",
+              fontSize: 12,
+            }}
+            onClick={() => signOut({ callbackUrl: "/backoffice" })}
+          >
+            Sign Out
+          </Button>
+          <MenuIcon sx={{fontSize:30,color:"info.main",display:{xs:"block",sm:"none"}}} onClick={()=>setOpenDrawer(true)}/>
+        </Box>
       ) : (
         <span />
       )}
+        <Drawer
+      anchor={"right"}
+      open={openDrawer}
+      onClose={()=>setOpenDrawer(false)}
+    >
+      <SideBar/>
+    </Drawer>
     </Box>
   );
 };

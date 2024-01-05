@@ -26,8 +26,7 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
-  TextField,
-  useMediaQuery,
+  TextField
 } from "@mui/material";
 import { AddOn, AddOnCategory, Menu } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -37,7 +36,6 @@ const TableDetails = () => {
   const router = useRouter();
   const tableId = Number(router.query.id);
   const locations = useAppSelector((state) => state.location.items);
-  const matches = useMediaQuery(theme.breakpoints.between("xs", "md"));
   const tables = useAppSelector((state) => state.table.items);
 
   const dispatch = useAppDispatch();
@@ -110,7 +108,7 @@ const TableDetails = () => {
   };
 
   return (
-    <Box sx={{ width: matches ? "100%" : "80vw" }}>
+    <Box sx={{ width:"100%" }}>
       <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"
@@ -123,7 +121,7 @@ const TableDetails = () => {
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2, mx: 1 }}
+          sx={{ width:{xs:250,sm:400} , mt: 2, mx: 1 }}
           label="Name"
           defaultValue={table?.name}
           onChange={(evt) =>

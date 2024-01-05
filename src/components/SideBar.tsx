@@ -5,7 +5,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useMediaQuery,
 } from "@mui/material";
 import CategoryIcon from "@mui/icons-material/Category";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
@@ -18,60 +17,65 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import Link from "next/link";
 import { theme } from "@/utlis/theme";
 
-interface Props {
-  open: boolean;
-  setOpen:(value:boolean)=>void
-}
 
-const SideBar = ({ open ,setOpen}: Props) => {
-    const matches = useMediaQuery(theme.breakpoints.between("xs","sm"))
 
-    return (
-      <Box
-        sx={{
-          "&:matches":{minWidth:"30vw"},
-          display:open?"block":matches?"none":"block",
-          bgcolor: "success.main",
-          minHeight: "90vh",
-          borderTopRightRadius: 5,
-        }}
-      >
-        {sidebarMenuItems.slice(0, 7).map((item) => (
-          <Link
-            key={item.id}
-            href={item.route}
-            style={{ textDecoration: "none", color: "#FFE194" }}
-          >
-            <ListItem disablePadding>
-              <ListItemButton onClick={()=>{matches && setOpen(false)}}>
-                <ListItemIcon sx={{ color: "info.main",display:matches?"none":"block" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
-        <Divider sx={{ bgcolor: "secondary.main", mx: 2 }} />
-        {sidebarMenuItems.slice(-1).map((item) => (
-          <Link
-            key={item.id}
-            href={item.route}
-            style={{ textDecoration: "none", color: "#FFE194" }}
-          >
-            <ListItem disablePadding >
-              <ListItemButton onClick={()=>{matches && setOpen(false)}} >
-                <ListItemIcon color="primary.main" sx={{ color: "info.main",display:matches?"none":"block" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
-      </Box>
-    );
-  
+const SideBar = () => {
+  return (
+    <Box
+      sx={{ 
+        display:{sm:"block"},
+        minWidth: { xs: "15vw", sm: "20vw", md: "15vw" },
+        bgcolor: "success.main",
+        minHeight: "100vh",
+        borderTopRightRadius: 5,
+      }}
+    >
+      {sidebarMenuItems.slice(0, 7).map((item) => (
+        <Link
+          key={item.id}
+          href={item.route}
+          style={{ textDecoration: "none", color: "#FFE194" }}
+        >
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon
+                sx={{
+                  color: "info.main",
+                  display: { xs: "block", sm: "none", md: "block" },
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+      ))}
+      <Divider sx={{ bgcolor: "secondary.main", mx: 1 }} />
+      {sidebarMenuItems.slice(-1).map((item) => (
+        <Link
+          key={item.id}
+          href={item.route}
+          style={{ textDecoration: "none", color: "#FFE194" }}
+        >
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon
+                color="primary.main"
+                sx={{
+                  color: "info.main",
+                  display: { xs: "block", sm: "none", md: "block" },
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+      ))}
+    </Box>
+  );
 };
 export default SideBar;
 

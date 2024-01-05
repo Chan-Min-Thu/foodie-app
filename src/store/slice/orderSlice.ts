@@ -32,6 +32,7 @@ export const createOrder = createAsyncThunk(
         body: JSON.stringify({ tableId, cartItems }),
       });
       const { orders } = await response.json();
+      console.log(orders)
       thunkApi.dispatch(setOrder(orders));
       onSuccess && onSuccess(orders);
     } catch (err) {
@@ -54,7 +55,7 @@ export const updateOrder = createAsyncThunk(
         }
       );
       const {orders} = await response.json();
-      thunkApi.dispatch(updateOrderItem(orders))
+      thunkApi.dispatch(setOrder(orders))
       onSuccess && onSuccess
     } catch (err) {
       isError && isError;
@@ -71,6 +72,7 @@ export const refreshOrder = createAsyncThunk(
         `${config.apiBaseUrl}/order?orderSeq=${orderSeq}`
       );
       const {orders} = await response.json();
+      console.log(orders)
       thunkApi.dispatch(setOrder(orders))
       onSuccess && onSuccess
     } catch (err) {
@@ -86,22 +88,10 @@ export const orderSlice = createSlice({
   reducers: {
     setOrder: (state, action: PayloadAction<Order[]>) => {
       state.items = action.payload;
-    },
-    updateOrderItem:(state,action:PayloadAction<UpdateOrder>)=>{
-      const payloadItemId = String(action.payload.itemId)
-      const otherOrders = state.items.filter(item=> item.itemId !== payloadItemId)
-      state.items = state.items.map(item=>{
-        const exit = state.items.find(item=> item.itemId === payloadItemId)
-        if(exit){
-           return {...exit,status:action.payload.status}
-        }else{
-            return item;
-        }
-      })
     }
   },
 });
 
-export const { setOrder,updateOrderItem } = orderSlice.actions;
+export const { setOrder } = orderSlice.actions;
 export default orderSlice.reducer;
 4;

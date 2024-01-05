@@ -78,7 +78,7 @@ const Carts = () => {
         mx: "auto",
         alignItems: "center",
         flexDirection: "column",
-        minWidth: 500,
+        maxWidth:"100vw*0.5",
         bgcolor: "#98d1c5",
       }}
     >
@@ -88,7 +88,7 @@ const Carts = () => {
       {carts.length ? (
         <Box>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ width:{xs:"100vw *0.8",sm:"50vw"} }} aria-label="simple table">
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontSize: 20 }}>Name</TableCell>

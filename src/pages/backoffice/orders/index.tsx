@@ -29,7 +29,7 @@ const Orders = () => {
   const addons = useAppSelector((state) => state.addon.items);
   const menus = useAppSelector((state) => state.menu.items);
   const tables = useAppSelector((state) => state.table.items);
-  const [orderItems, setOrderItems] = useState<OrderItem[]>();
+//   const [orderItems, setOrderItems] = useState<OrderItem[]>();
   const [value, setValue] = useState<ORDERSTATUS>(ORDERSTATUS.PENDING);
   const [filteredOrderItems, setFilteredOrderItems] = useState<OrderItem[]>([]);
 
@@ -40,27 +40,30 @@ const Orders = () => {
   //      dispatch(fetchAppData({}))
   //   }
   // },[session])
-  useEffect(() => {
-    const orderItems = formatOrders(orders, addons, menus, tables);
-    setOrderItems(orderItems);
-  }, [orders]);
+  
   const hanldeUpdateStatus = (itemId: string, status: ORDERSTATUS) => {
-    dispatch(updateOrder({ itemId, status }));
+   dispatch(updateOrder({ itemId, status }));
+   const filterOrderItems =  formatOrders(orders, addons, menus, tables)?.filter(
+    (item) => item.status === status
+  );
+  setFilteredOrderItems(filterOrderItems)
   };
+  console.log(value)
   useEffect(() => {
-    if (orderItems) {
-      const filterOrderItems = orderItems?.filter(
+    if (orders.length) {
+      const filterOrderItems =  formatOrders(orders, addons, menus, tables)?.filter(
         (item) => item.status === value
       );
       setFilteredOrderItems(filterOrderItems);
     }
-  }, [value]);
+  },[orders,value]);
 
   return (
     <Box
       sx={{
         display: "flex",
-        minWidth: "100%",
+        minWidth: "70vw",
+        mx:"auto",
         flexDirection: "column",
         justifyContent: "space-between",
         flexWrap: "wrap",
@@ -70,7 +73,7 @@ const Orders = () => {
         sx={{
           display: "flex",
           justifyContent: "flex-end",
-          width: "100%",
+          minWidth: "70vw",
           bgcolor: "background.paper",
         }}
       >
@@ -78,9 +81,8 @@ const Orders = () => {
           color="primary"
           value={value}
           exclusive
-          onChange={(event) => {
-            console.log(event.target.value);
-            setValue(event.target.value);
+          onChange={(event,value) => {
+            setValue(value);
           }}
           aria-label="Platform"
         >
@@ -106,6 +108,7 @@ const Orders = () => {
         {filteredOrderItems?.map((orderItem) => {
           return (
             <OrderCard
+              key={orderItem.itemId}
               orderItem={orderItem}
               isAdmin={true}
               handleUpdateStatus={hanldeUpdateStatus}

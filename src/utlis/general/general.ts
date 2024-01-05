@@ -44,7 +44,6 @@ export const formatOrders = (orders:Order[],addons:AddOn[],menus:Menu[],tables:T
                 orderAddons.push({addonCategoryId:addon?.addOnCategoryId,addons:[addon].sort((a,b)=>a.name.localeCompare(b.name))})
             }
         })
-        console.log(currentOrders)
         const menu= menus.find(menu=> menu.id === currentOrders[0].menuId) as Menu
         const table = tables.find(table=> table.id === currentOrders[0].tableId) as Table
         return {itemId:orderItemId,status:currentOrders[0].status,orderAddons,menu,table}

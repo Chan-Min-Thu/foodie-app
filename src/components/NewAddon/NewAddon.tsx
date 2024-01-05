@@ -63,13 +63,13 @@ const NewAddon = ({ open, setOpen }: Props) => {
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Create Addon </DialogTitle>
-      <DialogContent sx={{ width: 400 }}>
+      <DialogContent sx={{ width:{xs:250,sm:400} }}>
         <TextField
           id="outlined-basic"
           label="Name"
           defaultValue={newAddon ? newAddon.name : ""}
           variant="outlined"
-          sx={{ width: 400, mt: 2 }}
+          sx={{ width:{xs:250,sm:400} , mt: 2 }}
           onChange={(evt) =>
             setNewAddon({ ...newAddon, name: evt.target.value as string })
           }
@@ -79,13 +79,13 @@ const NewAddon = ({ open, setOpen }: Props) => {
           label="Price"
           variant="outlined"
           defaultValue={newAddon ? newAddon.price : 0}
-          sx={{ width: 400, mt: 2 }}
+          sx={{ width:{xs:250,sm:400} , mt: 2 }}
           onChange={(evt) =>
             setNewAddon({ ...newAddon, price: Number(evt.target.value) })
           }
         />
 
-        <FormControl sx={{ width: 400, mt: 2 }}>
+        <FormControl sx={{ width:{xs:250,sm:400} , mt: 2 }}>
           <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"

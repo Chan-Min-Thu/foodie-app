@@ -23,7 +23,6 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
-  useMediaQuery,
 } from "@mui/material";
 import { AddOnCategoryMenu, Menu } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -33,7 +32,6 @@ const AddonCatgoryDetails = () => {
   const router = useRouter();
   const addonCategoryId = Number(router.query.id);
   const addonCategories = useAppSelector((state) => state.addonCategory.items);
-  const matches = useMediaQuery(theme.breakpoints.between("xs", "md"));
   const addonCategoryMenus = useAppSelector(
     (state) => state.addonCategoryMenu.items as AddOnCategoryMenu[]);
   const menus = useAppSelector((state) => state.menu.items);
@@ -96,19 +94,19 @@ const AddonCatgoryDetails = () => {
   }
 
   return (
-    <Box sx={{ width: matches ? "100%" : "80vw" }}>
+    <Box sx={{ width:"100%"}}>
       <Box sx={{width:"100%",display:"flex",justifyContent:"flex-end"}} >
         <Button variant="outlined" color={"error"} onClick={()=>setOpen(true)}>Delete</Button>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
           id="outlined-basic"
-          sx={{ minWidth: 400, mt: 2, mx: 1 }}
+          sx={{ width:{xs:250,sm:400} , mt: 2, mx: 1 }}
           label="Name"
           defaultValue={addonCategory?.name}
           onChange={(evt) => setData({ ...data, name: evt.target.value })}
         />
-        <FormControl sx={{ m: 1, minWidth: 400 }}>
+        <FormControl sx={{ m: 1,width:{xs:250,sm:400} }}>
           <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
           <Select
             labelId="demo-multiple-chip-label"
@@ -129,7 +127,7 @@ const AddonCatgoryDetails = () => {
               PaperProps: {
                 style: {
                   maxHeight: 48 * 4.5 + 8,
-                  width: 250,
+                  width: 300,
                 },
               },
             }}
@@ -143,7 +141,7 @@ const AddonCatgoryDetails = () => {
           </Select>
         </FormControl>
         <FormControlLabel
-          sx={{ m: 1 }}
+          sx={{ m: 1,width:{xs:250,sm:400}  }}
           required
           onChange={(evt, value) => setData({ ...data, isRequired: value })}
           control={<Checkbox />}
