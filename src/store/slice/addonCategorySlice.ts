@@ -60,6 +60,9 @@ export const addonCategorySlice = createSlice({
     name:"addonCategory",
     initialState,
     reducers:{
+      setLoading:(state,action)=>{
+        state.isLoading=action.payload;
+      },
       setAddonCategory:(state,action)=>{
          state.items = action.payload
       },
@@ -76,5 +79,5 @@ export const addonCategorySlice = createSlice({
     }
 })
 
-export const { setAddonCategory,addAddonCategory,replaceAddonCategory,removeAddonCategory } = addonCategorySlice.actions;
+export const { setAddonCategory,addAddonCategory,replaceAddonCategory,removeAddonCategory,setLoading } = addonCategorySlice.actions;
 export  default addonCategorySlice.reducer

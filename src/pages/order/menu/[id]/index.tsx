@@ -18,7 +18,7 @@ const MenuDetails = () => {
   const tableId = query.tableId;
   const cart= carts.find((item)=> item.id === cartId)
   const menuId = Number(query.id);
-  const menus = useAppSelector((state) => state.menu.items);
+  const {items:menus,isLoading} = useAppSelector((state) => state.menu);
   const menu = menus.find((item) => item.id === menuId);
   const addonCategoryMenu = useAppSelector(
     (state) => state.addonCategoryMenu.items

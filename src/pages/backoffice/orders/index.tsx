@@ -29,17 +29,12 @@ const Orders = () => {
   const addons = useAppSelector((state) => state.addon.items);
   const menus = useAppSelector((state) => state.menu.items);
   const tables = useAppSelector((state) => state.table.items);
-//   const [orderItems, setOrderItems] = useState<OrderItem[]>();
   const [value, setValue] = useState<ORDERSTATUS>(ORDERSTATUS.PENDING);
   const [filteredOrderItems, setFilteredOrderItems] = useState<OrderItem[]>([]);
 
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((state) => state.app);
-  // useEffect(()=>{
-  //   if(session && !init){
-  //      dispatch(fetchAppData({}))
-  //   }
-  // },[session])
+ 
   
   const hanldeUpdateStatus = (itemId: string, status: ORDERSTATUS) => {
    dispatch(updateOrder({ itemId, status }));

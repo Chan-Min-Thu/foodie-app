@@ -18,15 +18,14 @@ import {
 } from "@mui/material";
 import { AddOn, Order } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 const Carts = () => {
   const carts = useAppSelector((state) => state.carts.items);
   const addons = useAppSelector((state) => state.addon.items);
   const orders = useAppSelector((state) => state.order.items);
-  const { query, ...router } = useRouter();
-  const cartId = String(query.itemId);
-  const tableId = Number(query.tableId);
+  const router = useRouter();
+  const cartId = String(router.query.itemId);
+  const tableId = Number(router.query.tableId);
   const cart = carts.find((item) => item.id === cartId);
   const dispatch = useAppDispatch();
   const renderAddOns = (items: AddOn[]) => {
@@ -49,43 +48,39 @@ const Carts = () => {
       </Box>
     ));
   };
-  //   const handleUpdate=()=>{
-  //     router.push({pathname:"order",query:{}})
-  //   }
-
-  const handleConfirmOrder = async() => {
+ 
+  const handleConfirmOrder = () =>  {
     const isValid = tableId;
-    if (isValid) {
-      dispatch(
-        createOrder({
-          tableId,
-          cartItems: carts,
-          onSuccess: (orders: Order[]) => {
-            dispatch(emptyCarts());
-            router.push({
-              pathname: `/order/active-order/${orders[0].orderSeq}`,
-              query: { tableId },
-            });
-            console.log("orders",orders)
-          },
-        }))
-    }
+    if (!isValid) return alert("Table Id");
+    dispatch(
+      createOrder({
+        tableId,
+        cartItems:carts,
+        onSuccess: (orders:Order[])=> {
+          dispatch(emptyCarts());
+          router.push({
+            pathname: `/order/active-order/${orders[0].orderSeq}`,
+            query: { tableId },
+          })
+        },
+      })
+    );
   };
   return (
     <Box
       sx={{
         display: "flex",
         mx: "auto",
+        mt:{sm:10},
         alignItems: "center",
         flexDirection: "column",
-        maxWidth:"100vw*0.5",
-        bgcolor: "#98d1c5",
+        maxWidth:"100vw*0.5"
       }}
     >
       <Typography variant="h4" sx={{ mx: "auto", fontWeight: 800 }}>
         Review your Order
       </Typography>
-      {carts.length ? (
+      {carts.length > 0 && (
         <Box>
           <TableContainer component={Paper}>
             <Table sx={{ width:{xs:"100vw *0.8",sm:"50vw"} }} aria-label="simple table">
@@ -131,7 +126,7 @@ const Carts = () => {
                       onClick={() =>
                         router.push({
                           pathname: `menu/${item.menu.id}`,
-                          query: { ...query, itemId: item.id },
+                          query: { ...router?.query, itemId: item.id },
                         })
                       }
                     />
@@ -159,7 +154,7 @@ const Carts = () => {
             </Button>
           </Box>
         </Box>
-      ) : (
+      )}{orders.length === 0 &&(
         <Box sx={{ my: 5 }}>
           <Typography>There is not any selected Carts.</Typography>
         </Box>

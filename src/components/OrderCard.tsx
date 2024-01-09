@@ -35,7 +35,7 @@ const OrderCard = ({ orderItem,isAdmin,handleUpdateStatus }: Props) => {
           sx={{
             height: 300 * 0.6,
             py:1,
-            overflow: "scroll",
+            overflowY: "scroll",
             borderBottom: "1px solid lightgray",
           }}
         >

@@ -19,7 +19,7 @@ export const generalTotalPrice =(carts:CartItems[])=>{
 
 export const formatOrders = (orders:Order[],addons:AddOn[],menus:Menu[],tables:Table[])=>{
     const orderItemIds:string[]= [];
-    orders.forEach(order=>{
+    orders.length >0 && orders?.forEach(order=>{
         const itemId = order.itemId as string;
         const exit = orderItemIds.find(orderItemId => orderItemId === order.itemId);
         if(!exit) orderItemIds.push(itemId);

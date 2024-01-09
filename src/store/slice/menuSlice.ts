@@ -95,11 +95,11 @@ export const menuSlice = createSlice({
     removeMenu:(state,action:PayloadAction<{id :number}>)=>{
       state.items = state.items.filter(item=> item.id !== action.payload.id)
     },
-    setIsLoading:(state,action:PayloadAction<boolean>)=>{
+    setLoading:(state,action:PayloadAction<boolean>)=>{
       state.isLoading = action.payload;
     }
   },
 });
 
-export const { setMenu,addMenu, replaceMenu,removeMenu,setIsLoading } = menuSlice.actions;
+export const { setMenu,addMenu, replaceMenu,removeMenu,setLoading } = menuSlice.actions;
 export default menuSlice.reducer;

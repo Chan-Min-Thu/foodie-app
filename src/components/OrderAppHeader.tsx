@@ -30,6 +30,8 @@ const OrderAppHeader = ({ countCartItems, company }: Props) => {
         justifyContent: "center",
         flexDirection: "column ",
         position: "fixed",
+        bgcolor:isHome ?"white":"",
+        pb:{sm:isHome?5:0},
         zIndex: "5",
       }}
     >
@@ -93,7 +95,7 @@ const OrderAppHeader = ({ countCartItems, company }: Props) => {
           </Box>
         )}
       </Box>
-      <Box sx={{ display: { xs: "none", sm: "block" } }}>
+      <Box sx={{ display: { xs: "none", sm:"block" } }}>
         {showCartIcon ? (
           <Box
             sx={{ position: "absolute", zIndex: 3, top: 20, right: "150px" }}
@@ -143,9 +145,11 @@ const OrderAppHeader = ({ countCartItems, company }: Props) => {
         {isHome && (
           <Box
             sx={{
-              width: "100%",
+              width: "100vw",
               mt: 0,
+              height:100,
               display: "flex",
+              bgcolor:"white",
               justifyContent: "center",
               flexDirection: "column",
               alignItems: "center",

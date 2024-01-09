@@ -15,6 +15,7 @@ export default async function handler(
    const {tableId,cartItems} = req.body;
    const isValid = tableId && cartItems.length;
    const isOrder = await prisma.order.findFirst({where:{tableId,status:ORDERSTATUS.PENDING || ORDERSTATUS.COOKING}})
+   const totalPrice = isOrder ? isOrder?.totalPrice + generalTotalPrice(cartItems):generalTotalPrice(cartItems)
    const orderSeq = isOrder ? isOrder?.orderSeq : nanoid(); 
    for(const cart of cartItems){
     const cartItem = cart as CartItems
@@ -28,7 +29,7 @@ export default async function handler(
                 itemId:cartItem.id,
                 addOnId:addon.id,
                 status:ORDERSTATUS.PENDING,
-                totalPrice:generalTotalPrice(cartItems),
+                totalPrice,
                 quantity:cartItem.quantity
                }})
         }
@@ -39,11 +40,12 @@ export default async function handler(
         orderSeq,
         itemId:cartItem.id,
         status:ORDERSTATUS.PENDING,
-        totalPrice:generalTotalPrice(cartItems),
+        totalPrice,
         quantity:cartItem.quantity
        }})
     }
    }
+   await prisma.order.updateMany({data:{totalPrice},where:{orderSeq}})
    const orders = await prisma.order.findMany({where:{orderSeq}})
    return res.status(200).json({orders})
   }else if(method === "GET"){

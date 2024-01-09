@@ -69,9 +69,12 @@ export const appSlice = createSlice({
     setInit: (state, action) => {
       state.init = action.payload;
     },
+    setLoading:(state,action)=>{
+      state.isLoading = action.payload
+    }
   },
 });
 
-export const { setInit } = appSlice.actions;
+export const { setInit,setLoading } = appSlice.actions;
 
 export default appSlice.reducer;

@@ -58,7 +58,7 @@ const TopBar = ({ open, setOpen }: Props) => {
         <Typography variant="h5" color={"secondary.main"}>
           Foodie App
         </Typography>
-        <Typography color={"secondary.main"}>({location?.township})</Typography>
+        {location && <Typography color={"secondary.main"}>({location?.township})</Typography>}
       </Box>
       {session ? (
         <Box>

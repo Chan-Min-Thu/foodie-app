@@ -38,7 +38,8 @@ const ActiveOrder = () => {
   return (
     <Box
       sx={{
-        width:"80vw",
+        mt:{sm:10},
+        width:"50vw",
         mx:"auto",
         display: "flex",
         justifyContent: "center",
@@ -55,7 +56,7 @@ const ActiveOrder = () => {
           Total Price: {orders[0]?.totalPrice}
         </Typography>
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "row", flexWrap:"wrap" }}>
+      <Box sx={{ display: "flex", flexDirection: "row", justifyContent:"center", flexWrap:"wrap" }}>
         {orderItems.map((orderItem) => {
           return (
             <Box key={orderItem.itemId} sx={{ my: 2, mx: 2 ,display:"flex",flexWrap:"wrap"}}>

@@ -26,10 +26,11 @@ const SideBar = () => {
         display:{sm:"block"},
         minWidth: { xs: "15vw", sm: "20vw", md: "15vw" },
         bgcolor: "success.main",
-        minHeight: "100vh",
+        minHeight: {xs:"100vh",sm:"100%"},
+        overflow:"hidden",
         borderTopRightRadius: 5,
       }}
-    >
+    > 
       {sidebarMenuItems.slice(0, 7).map((item) => (
         <Link
           key={item.id}

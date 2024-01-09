@@ -32,7 +32,6 @@ export const createOrder = createAsyncThunk(
         body: JSON.stringify({ tableId, cartItems }),
       });
       const { orders } = await response.json();
-      console.log(orders)
       thunkApi.dispatch(setOrder(orders));
       onSuccess && onSuccess(orders);
     } catch (err) {
@@ -56,7 +55,7 @@ export const updateOrder = createAsyncThunk(
       );
       const {orders} = await response.json();
       thunkApi.dispatch(setOrder(orders))
-      onSuccess && onSuccess
+      onSuccess && onSuccess(orders)
     } catch (err) {
       isError && isError;
     }
@@ -74,7 +73,7 @@ export const refreshOrder = createAsyncThunk(
       const {orders} = await response.json();
       console.log(orders)
       thunkApi.dispatch(setOrder(orders))
-      onSuccess && onSuccess
+      onSuccess && onSuccess(orders)
     } catch (err) {
       isError && isError;
     }
@@ -94,4 +93,3 @@ export const orderSlice = createSlice({
 
 export const { setOrder } = orderSlice.actions;
 export default orderSlice.reducer;
-4;

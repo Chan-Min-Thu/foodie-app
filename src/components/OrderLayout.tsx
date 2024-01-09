@@ -1,46 +1,48 @@
 import Box from "@mui/material/Box";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import OrderAppHeader from "./OrderAppHeader";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useRouter } from "next/router";
 import { fetchAppData } from "@/store/slice/appSlice";
-import { relative } from "path";
 import { Company, ORDERSTATUS } from "@prisma/client";
-import { setCompany } from "@/store/slice/companySlice";
 import { Typography } from "@mui/material";
-import ActiveOrder from "@/pages/order/active-order/[id]";
+import { setLoading } from "@/store/slice/menuSlice";
+import Loading from "./Loading";
+
 
 interface Props {
   children: ReactNode;
 }
 const OrderLayout = ({ children }: Props) => {
   const router = useRouter();
-
+  const [loading,setloading] = useState(true);
   const carts = useAppSelector((state) => state.carts.items);
   const orders = useAppSelector((state) => state.order.items);
   const company = useAppSelector((state) => state.company.item);
-
+  const {init,isLoading} = useAppSelector(state=>state.app)
   const tableId = Number(router.query.tableId);
   const menuId = Number(router.query.id);
   const orderSeq = String(router.query.orderSeq);
   const isCart = router.pathname === "/order/carts";
-  const showFooterBar =
-    !router.pathname.includes("/acitve-order") &&
-    orders.some(
-      (item) =>
-        item.status === ORDERSTATUS.PENDING ||
-        item.status === ORDERSTATUS.COOKING
-    );
+ 
   const isHome = tableId;
   const isMenu = menuId && tableId;
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (tableId) {
+    if (!init) {
       dispatch(fetchAppData({ tableId }));
+      setloading(false)
+      dispatch(setLoading(loading))
     }
-  }, [tableId]);
+  }, [tableId,init]);
+  const showFooterBar =
+  !router.pathname.includes("active-order") && orders.length >0 && 
+  orders.some(
+    (item) => item.status === ORDERSTATUS.PENDING ||
+      item.status === ORDERSTATUS.COOKING
+  );
   return (
     <Box
       sx={{
@@ -66,7 +68,7 @@ const OrderLayout = ({ children }: Props) => {
           pb:6
         }}
       >
-        {children}
+        {init ? children :<Loading/>}
       </Box>
       {showFooterBar && (
         <Box
