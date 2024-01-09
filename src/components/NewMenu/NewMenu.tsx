@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { createMenu, setIsLoading } from "@/store/slice/menuSlice";
+import { createMenu } from "@/store/slice/menuSlice";
 import { snackBarOpen } from "@/store/slice/snackBarSlice";
 import { CreateMenuOptions } from "@/types/menu";
 import {
@@ -69,7 +69,6 @@ const NewMenu = ({ open, setOpen }: Props) => {
   // };
 
   const handleCreateMenu = async () => {
-    dispatch(setIsLoading(true));
     const newMenuPayload = { ...newMenu };
     if (menuImage) {
       const formData = new FormData();
@@ -85,7 +84,6 @@ const NewMenu = ({ open, setOpen }: Props) => {
           ...newMenuPayload,
           onSuccess: () => {
             setOpen(false);
-            dispatch(setIsLoading(false));
             dispatch(
               snackBarOpen({
                 message: "New Menu created succcessfully.",
