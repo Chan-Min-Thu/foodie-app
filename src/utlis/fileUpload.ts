@@ -36,7 +36,7 @@ export const generateLinkForQRCode = (tableId: number) => {
 export const qrCodeImageUpload = async (tableId: number) => {
   try {
     const qrImageData = await QRCode.toDataURL(generateLinkForQRCode(tableId), {
-      scale: 30,
+      scale: 20,
     });
     const input = {
       Bucket: "msquarefdc",
